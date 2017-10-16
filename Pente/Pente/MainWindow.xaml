@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:Pente"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
+    <Grid
+        Background="Green">
         
     </Grid>
 </Window>
