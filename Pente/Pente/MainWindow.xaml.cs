@@ -1,14 +1,23 @@
 ﻿using Pente.Models;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace Pente
 {
-	/// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// </summary>
-	public partial class MainWindow : Window
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
     {
+        public UniformGrid GetMainGrid
+        {
+            get
+            {
+                return mainGrid;
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();	
@@ -37,7 +46,7 @@ namespace Pente
 				for (int col = 0; col < 19; col++)
 				{
 					// create the base label object that will interact with the players
-					PenteCellectaLabel label = new PenteCellectaLabel() {
+					PenteCellectaLabel label = new PenteCellectaLabel(row, col) {
 						BorderBrush = Brushes.DarkGray,
 						BorderThickness = new Thickness(1.0),
 						Background = Brushes.Green,
@@ -58,18 +67,6 @@ namespace Pente
 			mainWindow.Width = CELL_WIDTH * 19.5;
 			mainWindow.Height = CELL_HEIGHT * 20.3;
 
-		}
-
-		public MainWindow GetTestingObject(string key)
-		{
-			string checkKey = "testing";
-
-			if (key.ToLower().Equals(checkKey))
-			{
-				return this;
-			}
-
-			return null;
 		}
 		
 	} // end main class

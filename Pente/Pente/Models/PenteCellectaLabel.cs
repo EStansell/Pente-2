@@ -18,12 +18,14 @@ namespace Pente.Models
 	/// and the Pente Controller back-end.	
 	/// </summary>
 	public class PenteCellectaLabel : Label
-	{
-		
+    {
+        public int xPos { get; }
+        public int yPos { get; }
 
-
-		public PenteCellectaLabel()
+		public PenteCellectaLabel(int xPos, int yPos)
 		{
+            this.xPos = xPos;
+            this.yPos = yPos;
 			// subscribe function to the mouse down event 
 			PreviewMouseDown += ProcessLabel_Click;
 
