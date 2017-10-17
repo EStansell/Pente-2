@@ -1,80 +1,76 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Pente.Models;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Pente
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+	/// <summary>
+	/// Interaction logic for MainWindow.xaml
+	/// </summary>
+	public partial class MainWindow : Window
     {
         public MainWindow()
         {
-            InitializeComponent();
+            InitializeComponent();	
+			
+			// create our base gameboard
 			CreateGrid(); 
         }
 
+
+		/// <summary>
+		/// Creates the base grid for the gameboard, which will be interacted with during gameplay.
+		/// Holds pieces and data relevent to game decisions.
+		/// </summary>
 		public void CreateGrid()
 		{
+			// Pente gameboard size is 19x19 cells, make our grid have this size rows/columns
 			mainGrid.Columns = 19;
 			mainGrid.Rows = 19;
+			const int CELL_WIDTH = 30;
+			const int CELL_HEIGHT = 30;
 
+			// for each row in the grid
 			for (int row = 0; row < 19; row++)
 			{
-				//grid1.ColumnDefinitions.Add(new ColumnDefinition());
-
+				// for each column in this row
 				for (int col = 0; col < 19; col++)
 				{
-					//grid1.RowDefinitions.Add(new RowDefinition());
-
-					Label label = new Label() {
+					// create the base label object that will interact with the players
+					PenteCellectaLabel label = new PenteCellectaLabel() {
 						BorderBrush = Brushes.DarkGray,
 						BorderThickness = new Thickness(1.0),
 						Background = Brushes.Green,
-						Width = 30,
-						Height = 30
+						Width = CELL_WIDTH,
+						Height = CELL_HEIGHT					
 					};
-
-					label.PreviewMouseDown += ProcessLabel_Click;
-
-					mainGrid.Width = (label.Width) * 19;
-					mainGrid.Height = (label.Height) * 19;
-					mainWindow.Width = label.Width * 19.5;
-					mainWindow.Height = label.Height * 20.3;
-
+					// add the label to the grid
 					mainGrid.Children.Add(label);					
-				}
-			}
+				} // end inner for loop
+			} // end outer for loop 
 
-			Border border = new Border();
-			border.Width = mainGrid.Width;
-			border.Height = mainGrid.Height;
+
+			// set adequate grid size 
+			mainGrid.Width = (CELL_WIDTH) * 19;
+			mainGrid.Height = (CELL_HEIGHT) * 19;
+			
+			// set adequate window size to fit our label grid
+			mainWindow.Width = CELL_WIDTH * 19.5;
+			mainWindow.Height = CELL_HEIGHT * 20.3;
+
 		}
 
-		private void ProcessLabel_Click(object sender, RoutedEventArgs e)
+		public MainWindow GetTestingObject(string key)
 		{
-			Label label = (Label)sender;
+			string checkKey = "testing";
 
-			if (label.Background == Brushes.Green)
+			if (key.ToLower().Equals(checkKey))
 			{
-				label.Background = Brushes.Azure;
-				return;
+				return this;
 			}
 
-			label.Background = Brushes.Green;
+			return null;
 		}
-	}
+		
+	} // end main class
 }
