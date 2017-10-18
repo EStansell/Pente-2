@@ -9,11 +9,11 @@ namespace Pente.Controllers
 {
     public class PenteController
     {
-        public Boolean?[,] board;
-        public int[] boardCenter;
-        Player whitePlayer = null;
-        Player notWhitePlayer = null;
-        bool isWhitePlayersTurn = true;
+        private Boolean?[,] board;
+        private int[] boardCenter;
+        private Player whitePlayer = null;
+        private Player notWhitePlayer = null;
+        private bool isWhitePlayersTurn = true;
         private int currentRound;
 
         public int CurrentRound
