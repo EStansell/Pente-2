@@ -28,7 +28,8 @@ namespace Pente.Models
             this.yPos = yPos;
 			// subscribe function to the mouse down event 
 			PreviewMouseDown += ProcessLabel_Click;
-
+			MouseEnter += ProcessLabel_Hover;
+			MouseLeave += ProcessLabel_Hover;
 		}
 
 		/// <summary>
@@ -49,6 +50,22 @@ namespace Pente.Models
 
 			// change from "azure" color and exit function
 			label.Background = Brushes.Green;
+		}
+
+		/// <summary>
+		/// NEEDS SUMMARY
+		/// </summary>
+		private void ProcessLabel_Hover(object sender, System.Windows.Input.MouseEventArgs e)
+		{
+			Label label = (Label)sender;
+
+			if (label.Background == Brushes.LightGreen)
+			{			
+				label.Background = Brushes.Green;
+				return;
+			}
+
+			label.Background = Brushes.LightGreen;
 		}
 	}
 }

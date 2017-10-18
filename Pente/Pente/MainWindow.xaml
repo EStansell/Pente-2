@@ -6,10 +6,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pente"
         mc:Ignorable="d"
-        Title="Pente Game" ResizeMode="CanMinimize">
+        Title="Pente Game">
 
-		<UniformGrid x:Name="mainGrid"
+    <Grid>
+
+        <UniformGrid x:Name="mainGrid"
 					 Background="Gray">
-	</UniformGrid>
-	
+        </UniformGrid>
+
+		<Grid x:Name="overlayGrid"
+			Background= "Transparent"			  
+			>
+		</Grid>
+        
+    </Grid>
+
 </Window>

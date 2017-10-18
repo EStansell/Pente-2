@@ -9,6 +9,7 @@ namespace Pente.Controllers
 {
     public class PenteController
     {
+		//public bool?[][] boardTest;
         public Boolean?[,] board;
         public int[] boardCenter;
         Player[] players;
