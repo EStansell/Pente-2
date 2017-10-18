@@ -9,11 +9,18 @@ namespace Pente.Controllers
 {
     public class PenteController
     {
-		//public bool?[][] boardTest;
         public Boolean?[,] board;
         public int[] boardCenter;
-        Player[] players;
-        
+        Player whitePlayer = null;
+        Player notWhitePlayer = null;
+        bool isWhitePlayersTurn = true;
+        private int currentRound;
+
+        public int CurrentRound
+        {
+            get { return currentRound; }
+        }
+
         public PenteController(int xSize, int ySize, String player1Name, String player2Name)
         {
             if (xSize < 8 || xSize > 40)
@@ -28,22 +35,49 @@ namespace Pente.Controllers
 
             boardCenter = new int[] { xSize/2, ySize/2 };
 
-            players = new Player[] {new Player(player1Name, false), new Player(player2Name, true)};
+            whitePlayer = new Player(player1Name, false);
+            notWhitePlayer = new Player(player2Name, true);
 
             AttemptPlacement(boardCenter[0], boardCenter[1]);
         }
 
         public bool AttemptPlacement(int x, int y)
         {
+            bool placedPeice = false;
+            if(isValidOption(x, y))
+            {
+                placedPeice = true;
+                board[x, y] = isWhitePlayersTurn;
+                isWhitePlayersTurn = isWhitePlayersTurn ? false : true;
 
-            return false;
+                if (isWhitePlayersTurn)
+                {
+                    currentRound++;
+                }
+
+            }
+            return placedPeice;
         }
 
         public bool isValidOption(int x, int y)
         {
-            return (board[x, y] == null);
+            bool validOption = (board[x, y] == null);
+            if (!isWhitePlayersTurn && currentRound == 2)
+            {
+                int xCenter = boardCenter[0];
+                int yCenter = boardCenter[1];
+                if (x >= xCenter - 3 && x <= xCenter + 3 
+                    && y >= yCenter - 3 || y <= yCenter + 3)
+                {
+                    return validOption;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return validOption;
         }
-
 
     }
 }
