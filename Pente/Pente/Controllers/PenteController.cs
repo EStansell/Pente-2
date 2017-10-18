@@ -13,7 +13,7 @@ namespace Pente.Controllers
         private int[] boardCenter;
         private Player whitePlayer = null;
         private Player notWhitePlayer = null;
-        private bool isWhitePlayersTurn = true;
+        public bool isWhitePlayersTurn = true;
         private int currentRound;
 
         public int CurrentRound

@@ -1,4 +1,5 @@
-﻿using Pente.Models;
+﻿using Pente.Controllers;
+using Pente.Models;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -15,7 +16,9 @@ namespace Pente
        private const int CELL_HEIGHT = 30;
         public int GameBoardColumnCount { get; set; } = 19;
         public int GameBoardRowCount { get; set; } = 19;
-
+        
+        // Create controller
+        private static PenteController penteController;
 
         public UniformGrid GetMainGrid
         {
@@ -36,10 +39,14 @@ namespace Pente
 
         public MainWindow()
         {
-            InitializeComponent();	
-			
-			// create our base gameboard
-			CreateGrid();
+            InitializeComponent();
+
+            // Menu options for boardsize
+
+            penteController = new PenteController(GameBoardColumnCount, GameBoardRowCount, "Adam", "Kyle");
+
+            // create our base gameboard
+            CreateGrid();
 
             CreateOverlay();
         }
@@ -62,7 +69,7 @@ namespace Pente
 				for (int col = 0; col < GameBoardRowCount; col++)
 				{
 					// create the base label object that will interact with the players
-					PenteCellectaCanvas canvas = new PenteCellectaCanvas(row, col) {
+					PenteCellectaCanvas canvas = new PenteCellectaCanvas(row, col, penteController) {
 						//BorderBrush = Brushes.DarkGray,
 						//BorderThickness = new Thickness(0.5),
 						Background = Brushes.Transparent								
