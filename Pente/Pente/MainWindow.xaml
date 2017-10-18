@@ -6,18 +6,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pente"
         mc:Ignorable="d"
-        Title="Pente Game">
+        Title="Pente Game" Background="Green">
 
-    <Grid>
-
-        <UniformGrid x:Name="mainGrid"
-					 Background="Gray">
+	<Grid>
+		<UniformGrid x:Name="mainGrid"
+					 Background="Transparent"					 
+					 Panel.ZIndex="2"
+					 >
         </UniformGrid>
 
 		<Grid x:Name="overlayGrid"
-			Background= "Transparent"			  
-			>
+			Panel.ZIndex="1"
+			  
+			  >
 		</Grid>
+		
         
     </Grid>
 

@@ -62,13 +62,13 @@ namespace Pente
 				for (int col = 0; col < GameBoardRowCount; col++)
 				{
 					// create the base label object that will interact with the players
-					PenteCellectaLabel label = new PenteCellectaLabel(row, col) {
-						BorderBrush = Brushes.DarkGray,
-						BorderThickness = new Thickness(0.5),
-						Background = Brushes.Green								
+					PenteCellectaCanvas canvas = new PenteCellectaCanvas(row, col) {
+						//BorderBrush = Brushes.DarkGray,
+						//BorderThickness = new Thickness(0.5),
+						Background = Brushes.Transparent								
 					};
 					// add the label to the grid
-					mainGrid.Children.Add(label);					
+					mainGrid.Children.Add(canvas);					
 				} // end inner for loop
 			} // end outer for loop 
 
