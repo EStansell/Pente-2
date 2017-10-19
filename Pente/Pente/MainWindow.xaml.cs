@@ -52,6 +52,7 @@ namespace Pente
             penteController.PlaceFirstPiece();
 
             CreateOverlay();
+
         }
 
 
