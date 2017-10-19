@@ -48,6 +48,9 @@ namespace Pente
             // create our base gameboard
             CreateGrid();
 
+            //
+            penteController.PlaceFirstPiece();
+
             CreateOverlay();
         }
 
@@ -123,7 +126,6 @@ namespace Pente
             overlayGrid.Height = (GameBoardRowCount - 1) * CELL_HEIGHT; 
 
         }
-
 		
 	} // end main class
 }
