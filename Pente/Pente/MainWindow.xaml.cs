@@ -45,10 +45,12 @@ namespace Pente
 
             penteController = new PenteController(GameBoardColumnCount, GameBoardRowCount, "Adam", "Kyle");
 
-            // create our base gameboard
-            CreateGrid();
+			WidthValueLabel.Content = WidthSlider.Value;
+			HeightValueLabel.Content = HeightSlider.Value;
 
-            CreateOverlay();
+			overlayGrid.Visibility = Visibility.Collapsed;
+			mainGrid.Visibility = Visibility.Collapsed;
+           
         }
 
 
@@ -121,9 +123,44 @@ namespace Pente
 			
             overlayGrid.Width = (GameBoardColumnCount - 1) * CELL_WIDTH;
             overlayGrid.Height = (GameBoardRowCount - 1) * CELL_HEIGHT; 
-
+			
         }
 
-		
+		private void StartGameButtonClick(object sender, RoutedEventArgs e)
+		{
+			
+			CreateGrid();
+			CreateOverlay();
+
+			StartingMenuGrid.Visibility = Visibility.Collapsed;
+
+			overlayGrid.Visibility = Visibility.Visible;
+			mainGrid.Visibility = Visibility.Visible;
+		}
+
+		private void Close_Click(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+		{
+
+		}
+
+		private void Open_Click(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+		{
+
+		}
+
+		private void Save_Click(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+		{
+
+		}
+
+		private void SaveAs_Click(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+		{
+
+		}
+
+		private void HeightSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+		{
+			HeightValueLabel.Content = e.NewValue;
+		}
 	} // end main class
 }

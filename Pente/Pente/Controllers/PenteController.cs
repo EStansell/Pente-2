@@ -79,5 +79,13 @@ namespace Pente.Controllers
             return validOption;
         }
 
+		
+		public void ComputerTurn()
+		{
+			
+		}
+
+
+
     }
 }
