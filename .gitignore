@@ -1,2 +1,6 @@
-Pente/packages/MSTest.TestFramework.1.1.11/lib/netcoreapp1.0/Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
-*.dll
+Pente/.vs/*
+Pente/packages/*
+Pente/Pente/bin/*
+Pente/Pente/obj/*
+Pente/PenteUnitTest/bin/*
+Pente/PenteUnitTest/obj/*
