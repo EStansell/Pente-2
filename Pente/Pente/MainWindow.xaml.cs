@@ -132,8 +132,9 @@ namespace Pente
 			CreateGrid();
 			CreateOverlay();
 
-			StartingMenuGrid.Visibility = Visibility.Collapsed;
+			penteController.PlaceFirstPiece();
 
+			StartingMenuGrid.Visibility = Visibility.Collapsed;
 			overlayGrid.Visibility = Visibility.Visible;
 			mainGrid.Visibility = Visibility.Visible;
 		}
