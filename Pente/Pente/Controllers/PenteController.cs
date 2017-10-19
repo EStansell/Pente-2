@@ -15,6 +15,8 @@ namespace Pente.Controllers
         private Player notWhitePlayer = null;
         public bool isWhitePlayersTurn = false;
         private int currentRound = 1;
+        public int xTest;
+        public int yTest;
 
         public int CurrentRound
         {
@@ -51,8 +53,8 @@ namespace Pente.Controllers
             if(isValidOption(x, y))
             {
                 placedPeice = true;
-                board[x, y].IsWhitePlayer = isWhitePlayersTurn;
 
+                board[x, y].IsWhitePlayer = isWhitePlayersTurn;
                 if (isWhitePlayersTurn)
                 {
                     currentRound++;
