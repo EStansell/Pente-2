@@ -28,17 +28,47 @@ namespace Pente.Models
 
         private PenteController penteController;
 
+        private Shape shape;
+
+        private bool? isWhitePlayer;
+
+        public bool? IsWhitePlayer
+        {
+            get { return isWhitePlayer;}
+            set {
+                Background = Brushes.Transparent;
+                Opacity = 100;
+                switch (value)
+                {
+                    case true:
+                        // place/show a white piece
+                        shape.Fill = Brushes.White;
+                        break;
+                    case false:
+                        shape.Fill = Brushes.Black;
+                        break;
+                    default:
+                        shape.Fill = Brushes.Transparent;
+                        break;
+                }
+                isWhitePlayer = value;
+            }
+        }
 
 
         public PenteCellectaCanvas(int xPos, int yPos, PenteController penteController)
 		{
+            CreatePiece();
+
             this.XPos = xPos;
             this.YPos = yPos;
             this.penteController = penteController;
+            this.penteController.putCanvas(XPos, YPos, this);
 			// subscribe function to the mouse down event 
 			PreviewMouseDown += ProcessCanvas_Click;
 			MouseEnter += ProcessCanvas_Hover;
 			MouseLeave += ProcessCanvas_Hover;
+
 		}
 
         /// <summary>
@@ -50,29 +80,15 @@ namespace Pente.Models
             Canvas canvas = (Canvas)sender;
 
             if(penteController.isValidOption(XPos, YPos))
-            { 
-
-                Point point = new Point((canvas.Width / 2), (canvas.Height / 2));
-                Shape shape;
-                shape = new Ellipse()
-                {
-                    Width = 30,
-                    Height = 30,
-                };
-
-                shape.Opacity = 1.0;
-                canvas.Background = Brushes.Transparent;
-
-                shape.Fill = penteController.isWhitePlayersTurn ? Brushes.White : Brushes.Black;
+            {
                 penteController.AttemptPlacement(XPos, YPos);
-                
-
-
-                SetLeft(shape, point.X);
-                SetTop(shape, point.Y);
-                canvas.Children.Add(shape);
             }
 		}
+
+        public bool CanvaseMouseOverTest(bool aName)
+        {
+            return aName;
+        }
 
 		/// <summary>
 		/// NEEDS SUMMARY
@@ -89,15 +105,32 @@ namespace Pente.Models
                     // change opacity to see underlying grid
                     canvas.Opacity = 0.2;
                     canvas.Background = Brushes.LightGreen;
+                    CanvaseMouseOverTest(true);
                 }
                 else
                 {
                     canvas.Opacity = 1.0;
                     canvas.Background = Brushes.Transparent;
+                    CanvaseMouseOverTest(false);
                 }
             }
 
 			
 		}
-	}
+
+        private void CreatePiece()
+        {
+            Point point = new Point((this.Width / 2), (this.Height / 2));
+            shape = new Ellipse()
+            {
+                Width = 30,
+                Height = 30,
+                Fill = Brushes.Transparent
+            };
+
+            SetLeft(shape, point.X);
+            SetTop(shape, point.Y);
+            this.Children.Add(shape);
+        }
+    }
 }

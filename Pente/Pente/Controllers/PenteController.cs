@@ -9,12 +9,14 @@ namespace Pente.Controllers
 {
     public class PenteController
     {
-        private Boolean?[,] board;
+        private PenteCellectaCanvas[,] board;
         private int[] boardCenter;
         private Player whitePlayer = null;
         private Player notWhitePlayer = null;
-        public bool isWhitePlayersTurn = true;
-        private int currentRound;
+        public bool isWhitePlayersTurn = false;
+        private int currentRound = 1;
+        public int xTest;
+        public int yTest;
 
         public int CurrentRound
         {
@@ -31,13 +33,17 @@ namespace Pente.Controllers
             {
                 throw new ArgumentException("Y Board size is not allowed. Must be between 8 and 40. Input = " + ySize);
             }
-            board = new Boolean?[xSize, ySize];
+            board = new PenteCellectaCanvas[xSize, ySize];
 
             boardCenter = new int[] { xSize/2, ySize/2 };
 
             whitePlayer = new Player(player1Name, false);
             notWhitePlayer = new Player(player2Name, true);
 
+        }
+
+        public void PlaceFirstPiece()
+        {
             AttemptPlacement(boardCenter[0], boardCenter[1]);
         }
 
@@ -47,27 +53,29 @@ namespace Pente.Controllers
             if(isValidOption(x, y))
             {
                 placedPeice = true;
-                board[x, y] = isWhitePlayersTurn;
-                isWhitePlayersTurn = isWhitePlayersTurn ? false : true;
 
+                board[x, y].IsWhitePlayer = isWhitePlayersTurn;
                 if (isWhitePlayersTurn)
                 {
                     currentRound++;
                 }
 
+                isWhitePlayersTurn = isWhitePlayersTurn ? false : true;
             }
             return placedPeice;
         }
 
         public bool isValidOption(int x, int y)
         {
-            bool validOption = (board[x, y] == null);
+            Console.WriteLine(x + " " + y);
+            bool validOption = (board[x, y].IsWhitePlayer == null);
             if (!isWhitePlayersTurn && currentRound == 2)
             {
+                Console.WriteLine("In method");
                 int xCenter = boardCenter[0];
                 int yCenter = boardCenter[1];
-                if (x >= xCenter - 3 && x <= xCenter + 3 
-                    && y >= yCenter - 3 || y <= yCenter + 3)
+                if ((x >= xCenter + 3 || x <= xCenter - 3)
+                    || (y >= yCenter + 3 || y <= yCenter - 3))
                 {
                     return validOption;
                 }
@@ -79,13 +87,11 @@ namespace Pente.Controllers
             return validOption;
         }
 
-		
-		public void ComputerTurn()
-		{
-			
-		}
-
-
+        public void putCanvas(int x,int y, PenteCellectaCanvas canvas)
+        {
+            Console.WriteLine(x + " " + y);
+            this.board[x, y] = canvas;
+        }
 
     }
 }
