@@ -65,14 +65,17 @@ namespace Pente.Models
 
                 shape.Fill = penteController.isWhitePlayersTurn ? Brushes.White : Brushes.Black;
                 penteController.AttemptPlacement(XPos, YPos);
-                
-
 
                 SetLeft(shape, point.X);
                 SetTop(shape, point.Y);
                 canvas.Children.Add(shape);
             }
 		}
+
+        public bool CanvaseMouseOverTest(bool aName)
+        {
+            return aName;
+        }
 
 		/// <summary>
 		/// NEEDS SUMMARY
@@ -89,11 +92,13 @@ namespace Pente.Models
                     // change opacity to see underlying grid
                     canvas.Opacity = 0.2;
                     canvas.Background = Brushes.LightGreen;
+                    CanvaseMouseOverTest(true);
                 }
                 else
                 {
                     canvas.Opacity = 1.0;
                     canvas.Background = Brushes.Transparent;
+                    CanvaseMouseOverTest(false);
                 }
             }
 
