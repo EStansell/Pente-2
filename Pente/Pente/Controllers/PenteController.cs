@@ -50,7 +50,7 @@ namespace Pente.Controllers
         public bool AttemptPlacement(int x, int y)
         {
             bool placedPeice = false;
-            if(isValidOption(x, y))
+            if(IsValidOption(x, y))
             {
                 placedPeice = true;
 
@@ -65,9 +65,9 @@ namespace Pente.Controllers
             return placedPeice;
         }
 
-        public bool isValidOption(int x, int y)
+        public bool IsValidOption(int x, int y)
         {
-            Console.WriteLine(x + " " + y);
+			Console.WriteLine(x + " " + y);
             bool validOption = (board[x, y].IsWhitePlayer == null);
             if (!isWhitePlayersTurn && currentRound == 2)
             {

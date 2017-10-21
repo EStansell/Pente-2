@@ -22,7 +22,9 @@ namespace Pente.Models
 	/// </summary>
 	public class PenteCellectaCanvas : Canvas
     {
-        public int XPos { get; }
+		public static int CELL_HEIGHT { get; set; }
+		public static int CELL_WIDTH { get; set; }
+		public int XPos { get; }
         public int YPos { get; }
 		public static bool IsWhiteColor { get; set; } = true;
 
@@ -56,12 +58,15 @@ namespace Pente.Models
         }
 
 
-        public PenteCellectaCanvas(int xPos, int yPos, PenteController penteController)
+        public PenteCellectaCanvas(int xPos, int yPos, PenteController penteController, int cellHeight, int cellWidth)
 		{
             CreatePiece();
 
-            this.XPos = xPos;
-            this.YPos = yPos;
+			CELL_HEIGHT = cellHeight;
+			CELL_WIDTH = cellWidth;
+
+			XPos = xPos;
+            YPos = yPos;
             this.penteController = penteController;
             this.penteController.putCanvas(XPos, YPos, this);
 			// subscribe function to the mouse down event 
@@ -79,7 +84,7 @@ namespace Pente.Models
             // cast our object back into a Canvas that we can manipulate
             Canvas canvas = (Canvas)sender;
 
-            if(penteController.isValidOption(XPos, YPos))
+            if(penteController.IsValidOption(XPos, YPos))
             {
                 penteController.AttemptPlacement(XPos, YPos);
             }
@@ -97,7 +102,7 @@ namespace Pente.Models
 		{
 			// get our canvas to manipulate
 			Canvas canvas = (Canvas)sender;
-            if(penteController.isValidOption(XPos, YPos))
+            if(penteController.IsValidOption(XPos, YPos))
             {
                 // hover exit statements
                 if (canvas.IsMouseOver)
@@ -123,14 +128,14 @@ namespace Pente.Models
             Point point = new Point((this.Width / 2), (this.Height / 2));
             shape = new Ellipse()
             {
-                Width = 30,
-                Height = 30,
+                Width = CELL_WIDTH,
+                Height = CELL_HEIGHT,
                 Fill = Brushes.Transparent
             };
 
             SetLeft(shape, point.X);
             SetTop(shape, point.Y);
-            this.Children.Add(shape);
+            Children.Add(shape);
         }
     }
 }

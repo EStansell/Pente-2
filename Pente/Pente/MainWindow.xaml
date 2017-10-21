@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pente"
         mc:Ignorable="d"
-        Title="Pente Game" Background="Green">
+        Title="Pente Game" Background="Green" Width="750" Height="500">
 
 	<Window.CommandBindings>		<!-- The good news is we have access to numerous pre-built command            objects. Two of these common commands are Close and Save-->		<!-- At the minimum, your CommandBinding objects should always have            values for the Command and Executed properties. The Command property            represents the Command object we'll be using, Executed is the event            we're handling. -->		<CommandBinding Command="Close"                        Executed="Close_Click" />		<CommandBinding Command="Save"                        Executed="Save_Click" />		<CommandBinding Command="SaveAs"						Executed="SaveAs_Click" />		<CommandBinding Command="Open"						Executed="Open_Click" />	</Window.CommandBindings>
 
@@ -17,7 +17,7 @@
 
 		<Grid	x:Name="StartingMenuGrid"
 				Background="DarkCyan"
-				>
+				Panel.ZIndex="5">
 			
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition/>
@@ -53,7 +53,16 @@
 				   Margin="7"
 				   />
 
-			
+
+
+			<Label Grid.Column="1"
+				   Grid.Row="0"
+				   Content="Pente"
+				   FontSize="45"
+				   VerticalAlignment="Center"
+				   HorizontalAlignment="Center">
+				
+			</Label>
 			
 
 			<Label	Content="Board Size"
@@ -67,14 +76,17 @@
 			
 			<Slider
 					x:Name="WidthSlider"
-					Maximum="99"
-					Minimum="1"
 					Grid.Row="1"
 					Grid.Column="1"
 					Width="150"
 					VerticalAlignment="Center"
 					HorizontalAlignment="Right"
 					Margin="10"
+					ValueChanged="WidthSlider_ValueChanged"
+					Maximum="39"
+					Minimum="9"
+					TickFrequency="2"
+					IsSnapToTickEnabled="True"
 					>
 
 			</Slider>
@@ -107,15 +119,17 @@
 			</Label>
 
 			<Slider x:Name="HeightSlider"
-					Maximum="99"
-					Minimum="1"
 					Grid.Row="1"
 					Grid.Column="1"
 					Width="150"
 					VerticalAlignment="Bottom"
 					HorizontalAlignment="Right"
 					Margin="10"
-					ValueChanged="HeightSlider_ValueChanged">
+					ValueChanged="HeightSlider_ValueChanged"
+					Maximum="39"
+					Minimum="9"
+					TickFrequency="2"
+					IsSnapToTickEnabled="True">
 				
 			</Slider>
 
@@ -135,13 +149,17 @@
 		
 		<UniformGrid x:Name="mainGrid"
 					 Background="Transparent"					 
-					 Panel.ZIndex="2" Margin="2,1,-1.667,-0.667"
+					 Panel.ZIndex="2" 
+					 HorizontalAlignment="Center"
+					 VerticalAlignment="Center"
 					 >
         </UniformGrid>
 
 		<Grid x:Name="overlayGrid"
-			Panel.ZIndex="1"
-			 >
+				Panel.ZIndex="1"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+			  >
 		</Grid>
 
 	</Grid>
