@@ -10,14 +10,19 @@
 
 	<Window.CommandBindings>		<!-- The good news is we have access to numerous pre-built command            objects. Two of these common commands are Close and Save-->		<!-- At the minimum, your CommandBinding objects should always have            values for the Command and Executed properties. The Command property            represents the Command object we'll be using, Executed is the event            we're handling. -->		<CommandBinding Command="Close"                        Executed="Close_Click" />		<CommandBinding Command="Save"                        Executed="Save_Click" />		<CommandBinding Command="SaveAs"						Executed="SaveAs_Click" />		<CommandBinding Command="Open"						Executed="Open_Click" />	</Window.CommandBindings>
 
-
 	<Grid>
+
+		<Menu Background="LightSlateGray"			  FontSize="14"			  Height="25"			  Panel.ZIndex="10"			  VerticalAlignment="Top">		<MenuItem Header="_File">			<MenuItem Header="_Open"						  Command="Open" />			<MenuItem Header="_Save"                          Command="Save" />			<MenuItem Header="Save _As..."                          Command="SaveAs" />			<MenuItem Header="_Close"                          Command="Close"                          InputGestureText="Ctrl+C"/>		</MenuItem>	</Menu>
+
+
+
 
 		
 
 		<Grid	x:Name="StartingMenuGrid"
 				Background="DarkCyan"
-				Panel.ZIndex="5">
+				Panel.ZIndex="5"
+				Visibility="Collapsed">
 			
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition/>
@@ -30,6 +35,45 @@
 				<RowDefinition/>
 			</Grid.RowDefinitions>
 
+			<Label	Content="Enter Names:"
+					FontSize="24"
+					Width="155"
+					Height="50"
+					Grid.Column="0"
+					Grid.Row="1"
+					VerticalAlignment="Top"
+					HorizontalAlignment="Center"
+					 />
+			
+
+
+
+			<TextBox
+				x:Name="PlayerOneNameBox"
+				Height="30"
+				Width="145"
+				Grid.Row="1"
+				Grid.Column="0"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				Margin="10"
+				Text="Player 1"
+				>
+			</TextBox>
+
+			<TextBox
+				x:Name="PlayerTwoNameBox"
+				Height="30"
+				Width="145"
+				Grid.Row="1"
+				Grid.Column="0"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Bottom"
+				Margin="10"
+				Text="Player 2"
+				>
+				
+			</TextBox>
 
 			<Label x:Name="WidthValueLabel"
 				   Width="50"
@@ -38,7 +82,7 @@
 				   Grid.Column="2"
 				   HorizontalAlignment="Left"
 				   VerticalContentAlignment="Center"
-				   HorizontalContentAlignment="Left"
+				   HorizontalContentAlignment="Right"
 				   />
 			
 			<Label x:Name="HeightValueLabel"
@@ -49,7 +93,7 @@
 				   HorizontalAlignment="Left"
 				   VerticalAlignment="Bottom"
 				   VerticalContentAlignment="Bottom"
-				   HorizontalContentAlignment="Left"
+				   HorizontalContentAlignment="Right"
 				   Margin="7"
 				   />
 
@@ -69,18 +113,19 @@
 					FontSize="24"
 					Width="125"
 					Height="50"
-					Grid.Column="1"
+					Grid.Column="2"
 					Grid.Row="1"
 					VerticalAlignment="Top"
+					HorizontalAlignment="Left"
 					 />
 			
 			<Slider
 					x:Name="WidthSlider"
 					Grid.Row="1"
-					Grid.Column="1"
+					Grid.Column="2"
 					Width="150"
 					VerticalAlignment="Center"
-					HorizontalAlignment="Right"
+					HorizontalAlignment="Center"
 					Margin="10"
 					ValueChanged="WidthSlider_ValueChanged"
 					Maximum="39"
@@ -98,7 +143,7 @@
 				   FontSize="20"
 				   Grid.Column="1"
 				   Grid.Row= "1"
-				   HorizontalAlignment="Left"
+				   HorizontalAlignment="Right"
 				   Margin ="5"
 				   >
 				
@@ -111,7 +156,7 @@
 				   FontSize="20"
 				   Grid.Column="1"
 				   Grid.Row= "1"
-				   HorizontalAlignment="Left"
+				   HorizontalAlignment="Right"
 				   VerticalAlignment="Bottom"
 				  
 				   >
@@ -120,10 +165,10 @@
 
 			<Slider x:Name="HeightSlider"
 					Grid.Row="1"
-					Grid.Column="1"
+					Grid.Column="2"
 					Width="150"
 					VerticalAlignment="Bottom"
-					HorizontalAlignment="Right"
+					HorizontalAlignment="Center"
 					Margin="10"
 					ValueChanged="HeightSlider_ValueChanged"
 					Maximum="39"
@@ -147,20 +192,54 @@
 
 		</Grid>
 		
-		<UniformGrid x:Name="mainGrid"
-					 Background="Transparent"					 
-					 Panel.ZIndex="2" 
-					 HorizontalAlignment="Center"
-					 VerticalAlignment="Center"
-					 >
-        </UniformGrid>
+		<StackPanel
+			Orientation="Horizontal">
 
-		<Grid x:Name="overlayGrid"
-				Panel.ZIndex="1"
-				HorizontalAlignment="Center"
-				VerticalAlignment="Center"
-			  >
-		</Grid>
+			<Border
+				BorderThickness="1"
+				BorderBrush="Black"
+				>
+				<StackPanel >
+					<StackPanel.Resources>
+						<Style TargetType="Button" >
+							<Setter Property="Width" Value="80"/>
+							<Setter Property="Background" Value="LightSlateGray"/>
+							<Setter Property="FontSize" Value="18"/>
+							<Setter Property="Height" Value="35"/>
+							<Setter Property="Margin" Value="10 30 10 0"/>
+						</Style>
+					</StackPanel.Resources>
+					<Button 
+						Content="Test1"
+					/>
+
+					<Button 
+						Content="Test2"
+						/>
+				</StackPanel>
+			</Border>
+
+			<!--<Separator Width="10px"
+					   Height="{Binding ElementName=mainWindow, Path=Height }"
+					   Background="Black"
+					   />-->
+
+
+			<UniformGrid x:Name="mainGrid"
+						 Background="Transparent"					 
+						 Panel.ZIndex="2" 
+						 HorizontalAlignment="Center"
+						 VerticalAlignment="Center"
+						 >
+			</UniformGrid>
+
+			<Grid x:Name="overlayGrid"
+					Panel.ZIndex="1"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+				  >
+			</Grid>
+		</StackPanel>
 
 	</Grid>
 

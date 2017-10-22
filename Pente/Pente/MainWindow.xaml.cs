@@ -66,7 +66,7 @@ namespace Pente
 				for (int col = 0; col < (int)WidthSlider.Value; col++)
 				{
 					// create the base label object that will interact with the players
-					PenteCellectaCanvas canvas = new PenteCellectaCanvas(row, col, penteController, CELL_HEIGHT, CELL_WIDTH) {
+					PenteCellectaCanvas canvas = new PenteCellectaCanvas(col, row, penteController, CELL_HEIGHT, CELL_WIDTH) {
 						//BorderBrush = Brushes.DarkGray,
 						//BorderThickness = new Thickness(0.5),
 						Background = Brushes.Transparent								
@@ -127,7 +127,7 @@ namespace Pente
 		{
 			GameBoardColumnCount = (int)WidthSlider.Value;
 			GameBoardRowCount = (int)HeightSlider.Value;
-			penteController = new PenteController((int)WidthSlider.Value, (int)HeightSlider.Value, "Adam", "Kyle");
+			penteController = new PenteController((int)WidthSlider.Value, (int)HeightSlider.Value, PlayerOneNameBox.Text, PlayerTwoNameBox.Text);
 			
 			CreateGrid();
 			CreateOverlay();
