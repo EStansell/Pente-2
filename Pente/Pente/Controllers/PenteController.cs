@@ -1,37 +1,84 @@
 ﻿using Pente.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Pente.Controllers
 {
-    public class PenteController
+	[Serializable]
+    public class PenteController : INotifyPropertyChanged
     {
-        private PenteCellectaCanvas[,] board;
-        private int[] boardCenter;
+		public event PropertyChangedEventHandler PropertyChanged;
+		private PenteCellectaCanvas[,] board;
         private Player whitePlayer = null;
         private Player notWhitePlayer = null;
-        public bool isWhitePlayersTurn = false;
+        private int[] boardCenter;
         private int currentRound = 1;
+		private int notWhiteCaptureCount;
+		private int whiteCaptureCount;
+		private string currentPlayerName;
+        public bool isWhitePlayersTurn = false;
         public int xTest;
         public int yTest;
 
-        public int CurrentRound
+
+		public int WhiteCaptureCount
+		{
+			get { return whiteCaptureCount; }
+			set
+			{
+				whiteCaptureCount = value;
+				FieldChanged();
+			}
+		}
+
+		public int NotWhiteCaptureCount
+		{
+			get { return notWhiteCaptureCount; }
+			set
+			{
+				notWhiteCaptureCount = value;
+				FieldChanged();
+			}
+		}
+
+		public string CurrentPlayerName
+		{
+			get { return currentPlayerName; }
+			set
+			{
+				currentPlayerName = value;
+				FieldChanged();
+			}
+		}
+
+		public int CurrentRound
         {
             get { return currentRound; }
         }
 
-        public PenteController(int xSize, int ySize, String player1Name, String player2Name)
+		protected void FieldChanged([CallerMemberName] string field = null)
+		{
+			if (PropertyChanged != null)
+			{
+				PropertyChanged(this, new PropertyChangedEventArgs(field));
+			}
+		}
+
+
+		public PenteController(int xSize, int ySize, String player1Name, String player2Name)
         {
-            if (xSize < 8 || xSize > 40)
+            if (xSize < 9 || xSize > 39)
             {
-                throw new ArgumentException("X Board size is not allowed. Must be between 8 and 40. Input = " + xSize);
+                throw new ArgumentException("X Board size is not allowed. Must be between 9 and 39. Input = " + xSize);
             }
-            if (ySize < 8 || ySize > 40)
+            if (ySize < 9 || ySize > 39)
             {
-                throw new ArgumentException("Y Board size is not allowed. Must be between 8 and 40. Input = " + ySize);
+                throw new ArgumentException("Y Board size is not allowed. Must be between 9 and 39. Input = " + ySize);
             }
             board = new PenteCellectaCanvas[xSize, ySize];
 
@@ -61,6 +108,7 @@ namespace Pente.Controllers
                 }
 
                 isWhitePlayersTurn = isWhitePlayersTurn ? false : true;
+				CurrentPlayerName = isWhitePlayersTurn ? whitePlayer.Name : notWhitePlayer.Name;
             }
             return placedPeice;
         }
@@ -87,11 +135,24 @@ namespace Pente.Controllers
             return validOption;
         }
 
-        public void putCanvas(int x,int y, PenteCellectaCanvas canvas)
+        public void PutCanvas(int x,int y, PenteCellectaCanvas canvas)
         {
             Console.WriteLine(x + " " + y);
-            this.board[x, y] = canvas;
+            board[x, y] = canvas;
         }
 
-    }
+
+		public PenteCellectaCanvas[,] GetGameBoard()
+		{
+			return board;
+		}
+
+		public void MoveTimeElapsed()
+		{
+			currentRound++;
+			isWhitePlayersTurn = isWhitePlayersTurn? false : true;
+			CurrentPlayerName = isWhitePlayersTurn? whitePlayer.Name : notWhitePlayer.Name;
+		}
+
+	}
 }

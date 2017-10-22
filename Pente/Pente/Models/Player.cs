@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Pente.Models
 {
-    public class Player
+	[Serializable]
+	public class Player
     {
-        public String name { get; set; }
-        public bool isWhitePlayer { get; }
+        public String Name { get; set; }
+        public bool IsWhitePlayer { get; }
 
         public Player(String name, bool isWhitePlayer)
         {
@@ -17,8 +18,8 @@ namespace Pente.Models
             {
                 name = "[Unknown]";
             }
-            this.name = name;
-            this.isWhitePlayer = isWhitePlayer;
+            Name = name;
+            IsWhitePlayer = isWhitePlayer;
         }
     }
 }

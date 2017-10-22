@@ -6,18 +6,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pente"
         mc:Ignorable="d"
-        Title="Pente Game" Background="Green" Width="750" Height="500">
+        Title="Pente" Background="Green" Width="750" Height="500">
 
-	<Window.CommandBindings>		<!-- The good news is we have access to numerous pre-built command            objects. Two of these common commands are Close and Save-->		<!-- At the minimum, your CommandBinding objects should always have            values for the Command and Executed properties. The Command property            represents the Command object we'll be using, Executed is the event            we're handling. -->		<CommandBinding Command="Close"                        Executed="Close_Click" />		<CommandBinding Command="Save"                        Executed="Save_Click" />		<CommandBinding Command="SaveAs"						Executed="SaveAs_Click" />		<CommandBinding Command="Open"						Executed="Open_Click" />	</Window.CommandBindings>
+	<Window.CommandBindings>
+		<!-- The good news is we have access to numerous pre-built command
+            objects. Two of these common commands are Close and Save-->
+
+		<!-- At the minimum, your CommandBinding objects should always have
+            values for the Command and Executed properties. The Command property
+            represents the Command object we'll be using, Executed is the event
+            we're handling. -->
+		<CommandBinding Command="Close"
+                        Executed="Close_Click" />
+		<CommandBinding Command="Save"
+                        Executed="Save_Click" />
+		<CommandBinding Command="SaveAs"
+						Executed="SaveAs_Click" />
+		<CommandBinding Command="Open"
+						Executed="Open_Click" />
+	</Window.CommandBindings>
+	
+	<Window.InputBindings>
+		<KeyBinding Key="C"
+                    Modifiers="Ctrl"
+                    Command="Close" />
+	</Window.InputBindings>
 
 	<Grid>
 
-		<Menu Background="LightSlateGray"			  FontSize="14"			  Height="25"			  Panel.ZIndex="10"			  VerticalAlignment="Top">		<MenuItem Header="_File">			<MenuItem Header="_Open"						  Command="Open" />			<MenuItem Header="_Save"                          Command="Save" />			<MenuItem Header="Save _As..."                          Command="SaveAs" />			<MenuItem Header="_Close"                          Command="Close"                          InputGestureText="Ctrl+C"/>		</MenuItem>	</Menu>
-
-
-
-
-		
 
 		<Grid	x:Name="StartingMenuGrid"
 				Background="DarkCyan"
@@ -199,16 +215,82 @@
 				BorderThickness="1"
 				BorderBrush="Black"
 				>
-				<StackPanel >
+				<StackPanel 
+					Width="150"
+					Background="Gray" Margin="0,1.2,0,-0.4">
 					<StackPanel.Resources>
 						<Style TargetType="Button" >
 							<Setter Property="Width" Value="80"/>
-							<Setter Property="Background" Value="LightSlateGray"/>
+							<Setter Property="Background" Value="White"/>
 							<Setter Property="FontSize" Value="18"/>
 							<Setter Property="Height" Value="35"/>
 							<Setter Property="Margin" Value="10 30 10 0"/>
 						</Style>
 					</StackPanel.Resources>
+					<Menu Background="White"
+						  FontSize="14"
+						  Height="22"
+						  Panel.ZIndex="10">
+						<MenuItem Header="_File"
+								  Width="50">
+							<MenuItem Header="_Open"
+								Command="Open" />
+							<MenuItem Header="_Save"
+								Command="Save" />
+							<MenuItem Header="Save _As..."
+								Command="SaveAs" />
+							<MenuItem Header="_Close"
+								Command="Close"
+								InputGestureText="Ctrl+C"/>
+						</MenuItem>
+						<MenuItem Header="_Instructions"
+								  Width="100"
+								CommandManager.Executed="Instructions_Click"/>
+					</Menu>
+
+					<TextBlock Text="Pente"
+							   Margin="5"
+							   FontSize="30"
+							   FontStyle="Oblique"
+							   FontWeight="SemiBold"
+							   TextAlignment="Center"
+							   />
+					
+					<Label>
+						<TextBlock x:Name="lblUpdateUser"
+							   Width="140"
+							   Height="60"
+							   TextAlignment="Center"
+							   Text="{Binding Path=playerName}"
+							   FontSize="14"
+							   FontWeight="Bold"
+							   TextWrapping="WrapWithOverflow"
+							   />
+					</Label>
+
+					<Label Margin="10 40"
+						   Padding="0"
+						   Width="130"
+						   Height = "50">
+						<TextBlock x:Name="lblCurrentPlayer"
+							   Width="130"
+							   Height = "50"
+							   TextAlignment="Center"
+							   Text="{Binding Path=playerName}"
+							   FontSize="14"
+							   FontWeight="Bold"
+							   TextWrapping="WrapWithOverflow"
+							   />
+					</Label>
+
+					<Label x:Name="lblCountdown"
+							ContentStringFormat="Move Timer: {0}"
+							FontWeight="Bold"
+							HorizontalContentAlignment="Center"
+							FontSize="18"
+							Content=""
+						   />
+
 					<Button 
 						Content="Test1"
 					/>
@@ -216,6 +298,7 @@
 					<Button 
 						Content="Test2"
 						/>
+
 				</StackPanel>
 			</Border>
 

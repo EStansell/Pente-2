@@ -20,6 +20,7 @@ namespace Pente.Models
 	/// Its responsibility is to navigate communication between the WPF front-end
 	/// and the Pente Controller back-end.	
 	/// </summary>
+	[Serializable]
 	public class PenteCellectaCanvas : Canvas
     {
 		public static int CELL_HEIGHT { get; set; }
@@ -68,7 +69,7 @@ namespace Pente.Models
 			XPos = xPos;
             YPos = yPos;
             this.penteController = penteController;
-            this.penteController.putCanvas(XPos, YPos, this);
+            this.penteController.PutCanvas(XPos, YPos, this);
 			// subscribe function to the mouse down event 
 			PreviewMouseDown += ProcessCanvas_Click;
 			MouseEnter += ProcessCanvas_Hover;
