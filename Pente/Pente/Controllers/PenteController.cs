@@ -87,7 +87,7 @@ namespace Pente.Controllers
             {
                 yIsRightSize = ySize;
             }
-            board = new PenteCellectaCanvas[xSize, ySize];
+            board = new PenteCellectaCanvas[xSize,ySize];  
 
             boardCenter = new int[] { xSize/2, ySize/2 };
 
@@ -169,13 +169,43 @@ namespace Pente.Controllers
             if (isWhitePlayer)
             {
                 MessageBox.Show($"{whitePlayer.Name} Has Won The Game!");
+                App.Current.MainWindow.Close();
             }
             else
             {
                 MessageBox.Show($"{notWhitePlayer.Name} Has Won The Game!");
+                App.Current.MainWindow.Close();
+
             }
 
-         }
+        }
+        public void Yell(bool isWhitePlayer, int count)
+        {
+            if (isWhitePlayer)
+            {
+                if(count == 3)
+                {
+                    MessageBox.Show($"{whitePlayer.Name} Got a Tria!");
+                }
+                else if(count == 4)
+                {
+                    MessageBox.Show($"{whitePlayer.Name} Got a Tessera!");
+                }
+            }
+            else if(!isWhitePlayer)
+            {
+                if (count == 3)
+                {
+                    MessageBox.Show($"{notWhitePlayer.Name} Got a Tria!");
+                }
+                else if (count == 4)
+                {
+                    MessageBox.Show($"{notWhitePlayer.Name} Got a Tessera!");
+                }
+
+            }
+
+        }
 
         public int checkWin(int x, int y, bool whitePlayer)
         {
@@ -194,6 +224,10 @@ namespace Pente.Controllers
             if(highestCount == 5)
             {
                 determineWinner(isWhitePlayersTurn);
+            }
+            else if(highestCount == 4 || highestCount == 3)
+            {
+                Yell(isWhitePlayersTurn, highestCount);
             }
             return highestCount;
         }

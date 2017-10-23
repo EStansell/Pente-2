@@ -339,9 +339,40 @@ namespace PenteUnitTest
             Assert.AreEqual(null, !(pc.board[4, 3].IsWhitePlayer), "Black Cannot Place Piece In Boundary");
         }
         [TestMethod]
-        public void SwitchTurnsTest()
+        public void SwitchBlackToWhiteTurnsTest()
         {
+            PenteController pc = new PenteController(9, 9, "Boris", "Kyle");
+            for (int row = 0; row < 9; row++)
+            {
 
+                for (int col = 0; col < 9; col++)
+                {
+                    PenteCellectaCanvas canvas = new PenteCellectaCanvas(row, col, pc, 10, 10);
+                }
+
+            }
+            pc.PlaceFirstPiece(); //black
+            pc.AttemptPlacement(2, 3);//white
+            Assert.AreEqual(false, pc.isWhitePlayersTurn, "Switching Turns DOes Not Work");
+
+
+        }
+        [TestMethod]
+        public void SwitchWhiteToBlackTurnsTest()
+        {
+            PenteController pc = new PenteController(9, 9, "Boris", "Kyle");
+            for (int row = 0; row < 9; row++)
+            {
+
+                for (int col = 0; col < 9; col++)
+                {
+                    PenteCellectaCanvas canvas = new PenteCellectaCanvas(row, col, pc, 10, 10);
+                }
+
+            }
+            pc.PlaceFirstPiece();//black
+            pc.AttemptPlacement(2, 4);//white
+            pc.AttemptPlacement(4, 8);
         }
 
     }

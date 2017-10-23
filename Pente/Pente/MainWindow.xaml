@@ -38,7 +38,7 @@
         <Grid	x:Name="StartingMenuGrid"
 				Background="DarkCyan"
 				Panel.ZIndex="5"
-                x:FieldModifier="public">
+                >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="248*"/>
                 <ColumnDefinition Width="248*"/>
@@ -68,19 +68,13 @@
                     <MenuItem Header="_Close"
 								Command="Close"
 								InputGestureText="Ctrl+C"/>
-<<<<<<< HEAD
                 </MenuItem>
+
                 <MenuItem Header="_Instructions"
-								  Width="100"
-								CommandManager.Executed="Instructions_Click"/>
-            </Menu>
-=======
-				</MenuItem>
-				<MenuItem Header="_Instructions"
 								Width="100"
 								Click="MenuItem_Click"/>
-				</Menu>
->>>>>>> 3fb7ad851e6f08cf437727a4f4c973bc5fd04dc1
+            </Menu>
+
 
 
             <Label	Content="Enter Names:"
@@ -282,14 +276,8 @@
                         </MenuItem>
                         <MenuItem Header="_Instructions"
 								  Width="100"
-<<<<<<< HEAD
-								CommandManager.Executed="Instructions_Click"/>
+								  Click ="MenuItem_Click"/>
                     </Menu>
-=======
-								Click="MenuItem_Click"/>
-					</Menu>
->>>>>>> 3fb7ad851e6f08cf437727a4f4c973bc5fd04dc1
-
                     <TextBlock Text="Pente"
 							   Margin="5"
 							   FontSize="30"
@@ -312,45 +300,42 @@
 
                     <StackPanel>
                         <Label Height="30"
+                               Margin="0 30 0 0"
 							   Width="130"
-							   FontSize="14"
+							   FontSize="16"
 							   FontWeight="Bold"
 							   Content="Player's Turn: "
 							/>
                         <Label Width="130"
+                               Margin="0 0 0 20"
 							  x:Name="lblCurrentPlayer"						   
 							   Height = "30"
-							   FontSize="14"
+							   FontSize="16"
 							  HorizontalContentAlignment="Center">
 
                         </Label>
                     </StackPanel>
 
-                    <Label x:Name="lblCountdown"
+                    <Label x:Name="lblCountdown"                           
 							ContentStringFormat="Move Timer: {0}"
 							FontWeight="Bold"
 							HorizontalContentAlignment="Center"
 							FontSize="18"
 						   />
-                    <StackPanel>
+                    <StackPanel Margin="0 60 0 0">
                         <Label x:Name="lblWhiteCaptures"
-							Content="{Binding Path=WhiteCaptureCount}"
+                               FontSize="16"
+                                 Content="{Binding Path=WhiteCaptureCount}"                              							
 							   ContentStringFormat="White's Captures: {0}"/>
-                        <Label x:Name="lblNotWhiteCaptures"
-							Content="{Binding Path=NotWhiteCaptureCount}"
-							   ContentStringFormat="Black's Captures: {0}"/>
-                    </StackPanel>
-                    <Button 
-						Content="Test2"
-						/>
 
+                        <Label x:Name="lblNotWhiteCaptures"
+                               FontSize="16"
+                               Content="{Binding Path=NotWhiteCaptureCount}" 
+                               ContentStringFormat="Black's Captures: {0}"
+							   />
+                    </StackPanel>
                 </StackPanel>
             </Border>
-
-            <!--<Separator Width="10px"
-					   Height="{Binding ElementName=mainWindow, Path=Height }"
-					   Background="Black"
-					   />-->
 
             <Grid Margin="20 0 0 0">
                 <UniformGrid x:Name="mainGrid"
