@@ -150,13 +150,17 @@ namespace Pente.Controllers
         private int checkWin(int x, int y, bool whitePlayer)
         {
             int highestCount = checkRow(x - 4   , y     , 1, 0, whitePlayer);
-            
-            for(int xTran = -4; xTran < 5; xTran += 4)
-            {
-                int rowCount = checkRow(x + xTran, y - 4, (xTran % 4) * -1, 1, whitePlayer);
-                highestCount = rowCount > highestCount ? rowCount : highestCount;
-            }
 
+
+            int rowCount = checkRow(x + -4, y - 4, 1, 1, whitePlayer);
+            highestCount = rowCount > highestCount ? rowCount : highestCount;
+
+            rowCount = checkRow(x, y - 4, 0, 1, whitePlayer);
+            highestCount = rowCount > highestCount ? rowCount : highestCount;
+
+            rowCount = checkRow(x + 4, y - 4, -1, 1, whitePlayer);
+            highestCount = rowCount > highestCount ? rowCount : highestCount;
+            
             return highestCount;
         }
 
