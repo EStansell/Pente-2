@@ -162,21 +162,18 @@ namespace PenteUnitTest
             //Diagonal
 
             pc.PlaceFirstPiece();//black
-            pc.AttemptPlacement(0, 1);//white
-            pc.AttemptPlacement(1, 0);//black
-            pc.AttemptPlacement(1, 2);//white
-            pc.AttemptPlacement(2, 1);//black
-            pc.AttemptPlacement(2, 3);//white
-            pc.AttemptPlacement(3, 2);//black
-            pc.AttemptPlacement(3, 4);//white
-            pc.AttemptPlacement(4, 3);//black
-            pc.AttemptPlacement(4, 5);//white 
+            pc.AttemptPlacement(7,4);//white
+            pc.AttemptPlacement(1,1);//black
+            pc.AttemptPlacement(6,5);//white
+            pc.AttemptPlacement(8,0);//black
+            pc.AttemptPlacement(5,6);//white
+            pc.AttemptPlacement(4,0);//black
+            pc.AttemptPlacement(4,7);//white
+            pc.AttemptPlacement(0,4);//black
+            pc.AttemptPlacement(3,8);//white 
 
-            Assert.AreEqual(5, pc.checkWin(0, 1, true), $"Diagonal Win Does Not Work, Highest Count Is: {pc.checkWin(0, 1, true)}");
-            Assert.AreEqual(5, pc.checkWin(0, 2, true), "Diagonal Win Does Not Work");
-            //Assert.AreEqual(5, pc.checkWin(2, 3, true), "Diagonal Win Does Not Work");
-            //Assert.AreEqual(5, pc.checkWin(3, 4, true), "Diagonal Win Does Not Work");
-            //Assert.AreEqual(5, pc.checkWin(4, 5, true), "Diagonal Win Does Not Work");
+            Assert.AreEqual(5, pc.checkWin(7,4, true), $"Diagonal Win Does Not Work, Highest Count Is: {pc.checkWin(0, 1, true)}");
+            Assert.AreEqual(5, pc.checkWin(3,8, true), $"Diagonal Win Does Not Work, Highest Count Is: {pc.checkWin(3, 8, true)}");
 
         }
 
@@ -245,7 +242,6 @@ namespace PenteUnitTest
                 }
 
             }
-
             pc.PlaceFirstPiece();//black
             pc.AttemptPlacement(3, 3);//white
             pc.AttemptPlacement(0, 0);//black
@@ -255,7 +251,6 @@ namespace PenteUnitTest
 
             Assert.AreEqual(null, pc.board[2, 2].IsWhitePlayer, "Diagonal Capture Stones Does Not Work");
             Assert.AreEqual(null, pc.board[3, 3].IsWhitePlayer, "Diagonal Capture Stones Does Not Work");
-
         }
 
         [TestMethod]
@@ -269,14 +264,82 @@ namespace PenteUnitTest
                 {
 
                     PenteCellectaCanvas canvas = new PenteCellectaCanvas(row, col, pc, 10, 10);
-
                 }
 
             }
+            pc.PlaceFirstPiece();//black
+            pc.AttemptPlacement(2, 1);//white
+            pc.AttemptPlacement(1, 1);//black
+            pc.AttemptPlacement(3, 1);//white
+            pc.AttemptPlacement(4, 1);//black
+
+            pc.AttemptPlacement(0, 5);//white
+            pc.AttemptPlacement(0, 6);//black
+            pc.AttemptPlacement(0, 4);//white
+            pc.AttemptPlacement(0, 3);//black
+             
+            pc.AttemptPlacement(3,7);//white
+            pc.AttemptPlacement(2,7);//black
+            pc.AttemptPlacement(4,7);//white
+            pc.AttemptPlacement(5,7);//black
+
+            pc.AttemptPlacement(7, 3);//white
+            pc.AttemptPlacement(7, 2);//black
+            pc.AttemptPlacement(7, 4);//white
+            pc.AttemptPlacement(7, 5);//black
+
+            pc.AttemptPlacement(6, 0);//white
+            pc.AttemptPlacement(5, 0);//black
+            pc.AttemptPlacement(7, 0);//white
+            pc.AttemptPlacement(8, 0);//black
+
+            pc.checkCapture(4, 1, false);
+            pc.checkCapture(0, 6, false);
+            pc.checkCapture(6, 7, false);
+            pc.checkCapture(7, 2, false);
+            pc.checkCapture(8, 0, false); 
+            Assert.AreEqual(5, pc.NotWhiteCaptureCount, $"Capturing 5 Pairs Win Does Not Work Count Is: {pc.NotWhiteCaptureCount}");
         }
 
         [TestMethod]
         public void PlayerNameStoredTest()
+        {
+            PenteController pc = new PenteController(9, 9, "Boris", "Kyle");
+            for (int row = 0; row < 9; row++)
+            {
+
+                for (int col = 0; col < 9; col++)
+                {
+                    PenteCellectaCanvas canvas = new PenteCellectaCanvas(row, col, pc, 10, 10);
+                }
+
+            }
+            Assert.AreEqual(true, pc.whitePlayer.Name == "Boris", "Player One Name Not Stored");
+            Assert.AreEqual(true, pc.notWhitePlayer.Name == "Kyle", "Player One Name Not Stored");
+
+        }
+        [TestMethod]
+        public void BlackSecondMoveOutOfBoundaryTest()
+        {
+            PenteController pc = new PenteController(9, 9, "Boris", "Kyle");
+            for (int row = 0; row < 9; row++)
+            {
+
+                for (int col = 0; col < 9; col++)
+                {
+                    PenteCellectaCanvas canvas = new PenteCellectaCanvas(row, col, pc, 10, 10);
+                }
+
+            }
+            pc.PlaceFirstPiece();//black
+            pc.AttemptPlacement(1, 4);//white
+            pc.AttemptPlacement(4, 3);//black
+            pc.AttemptPlacement(3, 4);//white
+
+            Assert.AreEqual(null, !(pc.board[4, 3].IsWhitePlayer), "Black Cannot Place Piece In Boundary");
+        }
+        [TestMethod]
+        public void SwitchTurnsTest()
         {
 
         }

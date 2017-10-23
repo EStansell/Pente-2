@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace Pente.Controllers
 {
@@ -15,16 +16,15 @@ namespace Pente.Controllers
         public Player notWhitePlayer = null;
         public int[] boardCenter;
         private int currentRound = 1;
-		private int notWhiteCaptureCount = 0;
-		private int whiteCaptureCount = 0;
-		private string currentPlayerName;
+		public int notWhiteCaptureCount = 0;
+		public int whiteCaptureCount = 0;
+		public string currentPlayerName;
         public bool isWhitePlayersTurn = false;
         public int xTest;
         public int yTest;
         public int xIsRightSize;
         public int yIsRightSize;
-
-
+         
 		public int WhiteCaptureCount
 		{
 			get { return whiteCaptureCount; }
@@ -91,8 +91,8 @@ namespace Pente.Controllers
 
             boardCenter = new int[] { xSize/2, ySize/2 };
 
-            whitePlayer = new Player(player1Name, false);
-            notWhitePlayer = new Player(player2Name, true);
+            notWhitePlayer = new Player(player1Name, false);
+            whitePlayer = new Player(player2Name, true);
 
         }
 
@@ -112,6 +112,7 @@ namespace Pente.Controllers
 
                 checkCapture(x, y, isWhitePlayersTurn);
                 int highestInARow = checkWin(x, y, isWhitePlayersTurn);
+
 
                 // if HighestInARow > 4 : win
                 Console.WriteLine(highestInARow);
@@ -143,16 +144,38 @@ namespace Pente.Controllers
                             if (whitePlayer)
                             {
                                 WhiteCaptureCount++;
+                                if(WhiteCaptureCount == 5)
+                                {
+                                    determineWinner(true);
+                                }
                             }
                             else
                             {
                                 NotWhiteCaptureCount++;
+                                if(notWhiteCaptureCount == 5)
+                                {
+                                    determineWinner(false);
+
+                                }
                             }
                         }
                     }
                 }
             }
         }
+        public void determineWinner(bool isWhitePlayer)
+        {
+
+            if (isWhitePlayer)
+            {
+                MessageBox.Show($"{whitePlayer.Name} Has Won The Game!");
+            }
+            else
+            {
+                MessageBox.Show($"{notWhitePlayer.Name} Has Won The Game!");
+            }
+
+         }
 
         public int checkWin(int x, int y, bool whitePlayer)
         {
@@ -168,6 +191,10 @@ namespace Pente.Controllers
             rowCount = checkRow(x + 4, y - 4, -1, 1, whitePlayer);
             highestCount = rowCount > highestCount ? rowCount : highestCount;
             
+            if(highestCount == 5)
+            {
+                determineWinner(isWhitePlayersTurn);
+            }
             return highestCount;
         }
 
