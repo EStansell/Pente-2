@@ -24,11 +24,11 @@ namespace Pente
         private SaveFileDialog fileSaver = new SaveFileDialog();
         private OpenFileDialog fileOpener = new OpenFileDialog();
         private string fileDialogFilter = "Pente Game (*.pente)|*.pente*";
-        private string filePath = null;
+        public string filePath = null;
         [field: NonSerialized]
         private static DispatcherTimer countdownTimer = new DispatcherTimer();
 
-        private static int moveTime = 20;
+        public int moveTime = 20;
         private const int CELL_WIDTH = 20;
         private const int CELL_HEIGHT = 20;
         private string name1 = null;
@@ -226,7 +226,7 @@ namespace Pente
             }
         }
 
-        private void Save_Click(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        public void Save_Click(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
         {
             // if we already have a path to save at
             if (filePath != null)
@@ -244,7 +244,7 @@ namespace Pente
             }
         }
 
-        private void SaveAs_Click(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        public void SaveAs_Click(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
         {
             // open save dialog for user to navigate to save location
             bool? result = fileSaver.ShowDialog();
@@ -310,21 +310,18 @@ namespace Pente
 
             // if the game board is null, start the app as if it is the first run			
         }
-
-
+         
         private void HeightSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             HeightValueLabel.Content = e.NewValue;
         }
-
-
+         
         private void WidthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             WidthValueLabel.Content = e.NewValue;
         }
-
-
-        private void SetTimer()
+         
+        public void SetTimer()
         {
             countdownTimer.Tick += new EventHandler(CountdownTimer_Tick);
             countdownTimer.Interval = new TimeSpan(0, 0, 1); // 1 second
@@ -345,16 +342,14 @@ namespace Pente
                 penteController.MoveTimeElapsed();
                 moveTime = 20;
                 countdownTimer.Start();
-                lblCountdown.Foreground = Brushes.Black;
+                 lblCountdown.Foreground = Brushes.Black;
             }
 
             if (moveTime == 5)
             {
                 lblCountdown.Foreground = Brushes.Red;
             }
-
-
-
+             
             if (name1 != penteController.CurrentPlayerName && name2 != penteController.CurrentPlayerName)
             {
                 name2 = penteController.CurrentPlayerName;

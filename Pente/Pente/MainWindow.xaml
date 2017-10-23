@@ -33,11 +33,9 @@
     </Window.InputBindings>
 
     <Grid>
-
-
         <Grid	x:Name="StartingMenuGrid"
 				Background="DarkCyan"
-				Panel.ZIndex="5"
+				Panel.ZIndex="5" 
                 >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="248*"/>
