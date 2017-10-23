@@ -436,7 +436,9 @@ namespace Pente
 
 		private void MenuItem_Click(object sender, RoutedEventArgs e)
 		{
-			string message = "These are the instructions";
+			string message = "Win by placing five (or more) of your stones in a row, vertically,\n " +
+							"horizontally, or diagonally, with no empty points between them.\n " +
+							"Or, win by capturing five (or more) pairs of your opponent's stones.";
 			MessageBox.Show(message);
 		}
 	} // end main class
