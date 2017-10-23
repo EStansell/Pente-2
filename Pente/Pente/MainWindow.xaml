@@ -68,9 +68,9 @@
 								InputGestureText="Ctrl+C"/>
 				</MenuItem>
 				<MenuItem Header="_Instructions"
-								  Width="100"
-								CommandManager.Executed="Instructions_Click"/>
-			</Menu>
+								Width="100"
+								Click="MenuItem_Click"/>
+				</Menu>
 
 
 			<Label	Content="Enter Names:"
@@ -272,7 +272,7 @@
 						</MenuItem>
 						<MenuItem Header="_Instructions"
 								  Width="100"
-								CommandManager.Executed="Instructions_Click"/>
+								Click="MenuItem_Click"/>
 					</Menu>
 
 					<TextBlock Text="Pente"

@@ -30,6 +30,9 @@ namespace Pente
 		private static int moveTime = 20;
 		private const int CELL_WIDTH = 20;
 		private const int CELL_HEIGHT = 20;
+		private string name1 = null;
+		private string name2 = null;
+
 
 		public int GameBoardColumnCount { get; set; } = 9;
         public int GameBoardRowCount { get; set; } = 9;
@@ -76,6 +79,7 @@ namespace Pente
 				{
 					// create the base label object that will interact with the players
 					PenteCellectaCanvas cell = new PenteCellectaCanvas(col, row, penteController, CELL_HEIGHT, CELL_WIDTH);
+					cell.timer = countdownTimer;
 					Canvas canvas = CreateCanvas(cell);
 				
 					// add the label to the grid
@@ -141,6 +145,8 @@ namespace Pente
 
 
 		private void StartGameButtonClick(object sender, RoutedEventArgs e)
+
+
 		{
 			GameBoardColumnCount = (int)WidthSlider.Value;
 			GameBoardRowCount = (int)HeightSlider.Value;
@@ -148,8 +154,6 @@ namespace Pente
 			SetElementSizes();
 			CreateGame();
 		}
-
-
 		private void CreateGame()
 		{
 			// if at this point the main grid has no cavases, create them. otherwise, skip it
@@ -177,6 +181,8 @@ namespace Pente
 				StringFormat = $"{penteController.notWhitePlayer.Name} Captured: {0}"
 			};
 			lblNotWhiteCaptures.SetBinding(ContentProperty, binding2);
+
+			name1  = penteController.CurrentPlayerName;
 
 			SetTimer();
 		}
@@ -213,6 +219,7 @@ namespace Pente
 							StringFormat = $"Current Player: {0}"
 						};
 						lblCurrentPlayer.SetBinding(ContentProperty, binding1);
+
 					}
 				}
 			}
@@ -327,7 +334,6 @@ namespace Pente
 			countdownTimer.Start();
 		}
 
-
 		private void CountdownTimer_Tick(object sender, EventArgs e)
 		{
 			moveTime--;
@@ -347,16 +353,25 @@ namespace Pente
 				lblCountdown.Foreground = Brushes.Red;
 			}
 
+
+
+			if (name1 != penteController.CurrentPlayerName && name2 != penteController.CurrentPlayerName)
+			{
+				name2 = penteController.CurrentPlayerName;
+				moveTime = 20;
+				countdownTimer.Start();
+				lblCountdown.Foreground = Brushes.Black;
+			}
+			else if (name2 == penteController.CurrentPlayerName && name1 != penteController.CurrentPlayerName)
+			{
+				name1 = penteController.CurrentPlayerName;
+				moveTime = 20;
+				countdownTimer.Start();
+				lblCountdown.Foreground = Brushes.Black;
+			}
+
 			lblCountdown.Content = $" {moveTime.ToString()}";
 		}
-
-
-		private void Instructions_Click(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
-		{
-			string message = "";
-			MessageBox.Show(message, "caption", MessageBoxButton.OK);
-		}
-
 
 		private Ellipse CreatePiece()
 		{
@@ -388,7 +403,7 @@ namespace Pente
 			Binding colorBinding = new Binding("IsWhitePlayer")
 			{
 				Source = cell,
-				Converter = new BoolToBrushConverter(),			
+				Converter = new BoolToBrushConverter()			
 			};
 
 			// create the canvas for the grid
@@ -419,5 +434,10 @@ namespace Pente
 			return canvas;
 		}
 
+		private void MenuItem_Click(object sender, RoutedEventArgs e)
+		{
+			string message = "These are the instructions";
+			MessageBox.Show(message);
+		}
 	} // end main class
 }
