@@ -68,11 +68,19 @@
                     <MenuItem Header="_Close"
 								Command="Close"
 								InputGestureText="Ctrl+C"/>
+<<<<<<< HEAD
                 </MenuItem>
                 <MenuItem Header="_Instructions"
 								  Width="100"
 								CommandManager.Executed="Instructions_Click"/>
             </Menu>
+=======
+				</MenuItem>
+				<MenuItem Header="_Instructions"
+								Width="100"
+								Click="MenuItem_Click"/>
+				</Menu>
+>>>>>>> 3fb7ad851e6f08cf437727a4f4c973bc5fd04dc1
 
 
             <Label	Content="Enter Names:"
@@ -274,8 +282,13 @@
                         </MenuItem>
                         <MenuItem Header="_Instructions"
 								  Width="100"
+<<<<<<< HEAD
 								CommandManager.Executed="Instructions_Click"/>
                     </Menu>
+=======
+								Click="MenuItem_Click"/>
+					</Menu>
+>>>>>>> 3fb7ad851e6f08cf437727a4f4c973bc5fd04dc1
 
                     <TextBlock Text="Pente"
 							   Margin="5"

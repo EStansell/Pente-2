@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Pente.Models
 {
@@ -27,9 +28,10 @@ namespace Pente.Models
 		public static int CELL_WIDTH { get; set; }
 		public int XPos { get; }
         public int YPos { get; }
+		public DispatcherTimer timer = null;
 		private PenteController penteController;		
 		private bool? isWhitePlayer;
-		
+
 		public bool? IsWhitePlayer
         {
             get { return isWhitePlayer; }
@@ -70,13 +72,13 @@ namespace Pente.Models
             // cast our object back into a Canvas that we can manipulate
             Canvas canvas = (Canvas)sender;
 
-            if(penteController.IsValidOption(XPos, YPos))
-            {
+			if (penteController.IsValidOption(XPos, YPos))
+			{
 				canvas.Opacity = 1.0;
 				canvas.Background = Brushes.Transparent;
 				penteController.AttemptPlacement(XPos, YPos);
 				UpdateChildShape(canvas);
-            }
+			}
 		}
 
         
