@@ -4,6 +4,7 @@ using System.Windows.Controls.Primitives;
 using Pente.Models;
 using Pente.Controllers;
 
+
 namespace PenteUnitTest
 {
     [TestClass]
@@ -436,6 +437,8 @@ namespace PenteUnitTest
             pc.AttemptPlacement(2, 4);//white
             pc.AttemptPlacement(4, 8);//black
             Assert.AreEqual(false, !pc.isWhitePlayersTurn, "Switching Turns Does Not Work");
+
+
         }
         //[TestMethod]
         //public void SaveTest()
