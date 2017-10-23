@@ -10,10 +10,10 @@ namespace Pente.Controllers
     {
 		[field:NonSerialized]
 		public event PropertyChangedEventHandler PropertyChanged;
-		private PenteCellectaCanvas[,] board;
+		public PenteCellectaCanvas[,] board;
         public Player whitePlayer = null;
         public Player notWhitePlayer = null;
-        private int[] boardCenter;
+        public int[] boardCenter;
         private int currentRound = 1;
 		private int notWhiteCaptureCount = 0;
 		private int whiteCaptureCount = 0;
@@ -21,6 +21,8 @@ namespace Pente.Controllers
         public bool isWhitePlayersTurn = false;
         public int xTest;
         public int yTest;
+        public int xIsRightSize;
+        public int yIsRightSize;
 
 
 		public int WhiteCaptureCount
@@ -73,9 +75,17 @@ namespace Pente.Controllers
             {
                 throw new ArgumentException("X Board size is not allowed. Must be between 9 and 39. Input = " + xSize);
             }
+            else
+            {
+                xIsRightSize = xSize;
+            }
             if (ySize < 9 || ySize > 39)
             {
                 throw new ArgumentException("Y Board size is not allowed. Must be between 9 and 39. Input = " + ySize);
+            }
+            else
+            {
+                yIsRightSize = ySize;
             }
             board = new PenteCellectaCanvas[xSize, ySize];
 
@@ -116,7 +126,7 @@ namespace Pente.Controllers
             return placedPeice;
         }
 
-        private void checkCapture(int x, int y, bool whitePlayer)
+        public void checkCapture(int x, int y, bool whitePlayer)
         {
             for (int xTran = -1; xTran < 2; xTran++)
             {
@@ -144,7 +154,7 @@ namespace Pente.Controllers
             }
         }
 
-        private int checkWin(int x, int y, bool whitePlayer)
+        public int checkWin(int x, int y, bool whitePlayer)
         {
             int highestCount = checkRow(x - 4   , y     , 1, 0, whitePlayer);
 
