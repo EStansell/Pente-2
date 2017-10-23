@@ -18,8 +18,8 @@ namespace Pente.Controllers
         private Player notWhitePlayer = null;
         private int[] boardCenter;
         private int currentRound = 1;
-		private int notWhiteCaptureCount;
-		private int whiteCaptureCount;
+		private int notWhiteCaptureCount = 0;
+		private int whiteCaptureCount = 0;
 		private string currentPlayerName;
         public bool isWhitePlayersTurn = false;
         public int xTest;
@@ -102,24 +102,101 @@ namespace Pente.Controllers
                 placedPeice = true;
 
                 board[x, y].IsWhitePlayer = isWhitePlayersTurn;
+
+                checkCapture(x, y, isWhitePlayersTurn);
+                int highestInARow = checkWin(x, y, isWhitePlayersTurn);
+
+                // if HighestInARow > 4 : win
+                Console.WriteLine(highestInARow);
+
                 if (isWhitePlayersTurn)
                 {
                     currentRound++;
                 }
-
                 isWhitePlayersTurn = isWhitePlayersTurn ? false : true;
 				CurrentPlayerName = isWhitePlayersTurn ? whitePlayer.Name : notWhitePlayer.Name;
             }
             return placedPeice;
         }
 
+        private void checkCapture(int x, int y, bool whitePlayer)
+        {
+            for (int xTran = -1; xTran < 2; xTran++)
+            {
+                for (int yTran = -1; yTran < 2; yTran++)
+                {
+                    if (!(xTran == 0 && yTran == 0))
+                    {
+                        if (testColor(x + xTran, y + yTran, !whitePlayer) &&
+                            testColor(x + (xTran * 2), y + (yTran * 2), !whitePlayer) &&
+                            testColor(x + (xTran * 3), y + (yTran * 3), whitePlayer))
+                        {
+                            board[x + xTran, y + yTran].IsWhitePlayer = null;
+                            board[x + (xTran * 2), y + (yTran * 2)].IsWhitePlayer = null;
+                            if (whitePlayer)
+                            {
+                                WhiteCaptureCount++;
+                            }
+                            else
+                            {
+                                NotWhiteCaptureCount++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private int checkWin(int x, int y, bool whitePlayer)
+        {
+            int highestCount = checkRow(x - 4   , y     , 1, 0, whitePlayer);
+            
+            for(int xTran = -4; xTran < 5; xTran += 4)
+            {
+                int rowCount = checkRow(x + xTran, y - 4, (xTran % 4) * -1, 1, whitePlayer);
+                highestCount = rowCount > highestCount ? rowCount : highestCount;
+            }
+
+            return highestCount;
+        }
+
+        private bool testColor(int x, int y, bool player)
+        {
+            bool isColor = false;
+            if(x >= 0 && x < board.GetLength(0) && 
+                    y >= 0 && y < board.GetLength(1))
+            {
+                isColor = board[x, y].IsWhitePlayer == player;
+            }
+            return isColor;
+        }
+
+        private int checkRow(int x, int y, int xTran, int yTran, bool playerColor)
+        {
+            int highestCount = 0;
+            int inARowCount = 0;
+            for(int distance = 0; distance < 9; distance++)
+            {
+                int newX = x + (xTran * distance);
+                int newY = y + (yTran * distance);
+                if (testColor(newX, newY, playerColor))
+                {
+                    inARowCount++;
+                    highestCount = highestCount > inARowCount ? highestCount : inARowCount;
+                }
+                else
+                {
+                    inARowCount = 0;
+                }
+            }
+            return highestCount;
+        }
+
         public bool IsValidOption(int x, int y)
         {
-			Console.WriteLine(x + " " + y);
             bool validOption = (board[x, y].IsWhitePlayer == null);
             if (!isWhitePlayersTurn && currentRound == 2)
             {
-                Console.WriteLine("In method");
                 int xCenter = boardCenter[0];
                 int yCenter = boardCenter[1];
                 if ((x >= xCenter + 3 || x <= xCenter - 3)

@@ -37,8 +37,7 @@
 
 		<Grid	x:Name="StartingMenuGrid"
 				Background="DarkCyan"
-				Panel.ZIndex="5"
-				Visibility="Collapsed">
+				Panel.ZIndex="5">
 			
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition/>
