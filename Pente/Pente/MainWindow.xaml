@@ -25,7 +25,7 @@
 		<CommandBinding Command="Open"
 						Executed="Open_Click" />
 	</Window.CommandBindings>
-	
+
 	<Window.InputBindings>
 		<KeyBinding Key="C"
                     Modifiers="Ctrl"
@@ -38,7 +38,6 @@
 		<Grid	x:Name="StartingMenuGrid"
 				Background="DarkCyan"
 				Panel.ZIndex="5">
-			
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition/>
 				<ColumnDefinition/>
@@ -50,6 +49,30 @@
 				<RowDefinition/>
 			</Grid.RowDefinitions>
 
+			<Menu Background="White"
+				  VerticalAlignment="Top"
+				  Grid.ColumnSpan="3"
+						  FontSize="14"
+						  Height="22"
+						  Panel.ZIndex="10">
+				<MenuItem Header="_File"
+								  Width="50">
+					<MenuItem Header="_Open"
+								Command="Open" />
+					<MenuItem Header="_Save"
+								Command="Save" />
+					<MenuItem Header="Save _As..."
+								Command="SaveAs" />
+					<MenuItem Header="_Close"
+								Command="Close"
+								InputGestureText="Ctrl+C"/>
+				</MenuItem>
+				<MenuItem Header="_Instructions"
+								  Width="100"
+								CommandManager.Executed="Instructions_Click"/>
+			</Menu>
+
+
 			<Label	Content="Enter Names:"
 					FontSize="24"
 					Width="155"
@@ -59,11 +82,11 @@
 					VerticalAlignment="Top"
 					HorizontalAlignment="Center"
 					 />
-			
-
-
 
 			<TextBox
+				Padding="10 0 0 0"
+				FontSize="14"
+				VerticalContentAlignment="Center"
 				x:Name="PlayerOneNameBox"
 				Height="30"
 				Width="145"
@@ -77,6 +100,9 @@
 			</TextBox>
 
 			<TextBox
+				Padding="10 0 0 0"
+				FontSize="14"
+				VerticalContentAlignment="Center"
 				x:Name="PlayerTwoNameBox"
 				Height="30"
 				Width="145"
@@ -87,7 +113,7 @@
 				Margin="10"
 				Text="Player 2"
 				>
-				
+
 			</TextBox>
 
 			<Label x:Name="WidthValueLabel"
@@ -95,21 +121,22 @@
 				   Height="50"
 				   Grid.Row="1"
 				   Grid.Column="2"
+				   FontSize="18"
 				   HorizontalAlignment="Left"
 				   VerticalContentAlignment="Center"
-				   HorizontalContentAlignment="Right"
+				   HorizontalContentAlignment="Center"
 				   />
-			
+
 			<Label x:Name="HeightValueLabel"
 				   Width="50"
-				   Height="50"
+				   Height="40"
 				   Grid.Row="1"
 				   Grid.Column="2"
+					FontSize="18"
 				   HorizontalAlignment="Left"
 				   VerticalAlignment="Bottom"
-				   VerticalContentAlignment="Bottom"
-				   HorizontalContentAlignment="Right"
-				   Margin="7"
+				   VerticalContentAlignment="Center"
+				   HorizontalContentAlignment="Center" Margin="0,0,0,156.4" Grid.RowSpan="2" 				 
 				   />
 
 
@@ -120,9 +147,9 @@
 				   FontSize="45"
 				   VerticalAlignment="Center"
 				   HorizontalAlignment="Center">
-				
+
 			</Label>
-			
+
 
 			<Label	Content="Board Size"
 					FontSize="24"
@@ -133,7 +160,7 @@
 					VerticalAlignment="Top"
 					HorizontalAlignment="Left"
 					 />
-			
+
 			<Slider
 					x:Name="WidthSlider"
 					Grid.Row="1"
@@ -151,19 +178,20 @@
 
 			</Slider>
 
-			<Label
+			<Label 
 					Width="73"
 					Height="40"
 				   Content="Width:"
 				   FontSize="20"
 				   Grid.Column="1"
 				   Grid.Row= "1"
+					HorizontalContentAlignment="Right"
 				   HorizontalAlignment="Right"
 				   Margin ="5"
 				   >
-				
+
 			</Label>
-			
+
 			<Label
 					Width="73"
 					Height="40"
@@ -190,7 +218,7 @@
 					Minimum="9"
 					TickFrequency="2"
 					IsSnapToTickEnabled="True">
-				
+
 			</Slider>
 
 			<Button Background ="LightGray"
@@ -203,10 +231,10 @@
 					VerticalAlignment="Bottom"
 					Margin="15"
 					Click="StartGameButtonClick"/>
-			
+
 
 		</Grid>
-		
+
 		<StackPanel
 			Orientation="Horizontal">
 
@@ -216,7 +244,7 @@
 				>
 				<StackPanel 
 					Width="150"
-					Background="Gray" Margin="0,1.2,0,-0.4">
+					Background="Gray" >
 					<StackPanel.Resources>
 						<Style TargetType="Button" >
 							<Setter Property="Width" Value="80"/>
@@ -254,7 +282,7 @@
 							   FontWeight="SemiBold"
 							   TextAlignment="Center"
 							   />
-					
+
 					<Label>
 						<TextBlock x:Name="lblUpdateUser"
 							   Width="140"
@@ -267,33 +295,36 @@
 							   />
 					</Label>
 
-					<Label Margin="10 40"
-						   Padding="0"
-						   Width="130"
-						   Height = "50">
-						<TextBlock x:Name="lblCurrentPlayer"
+					<StackPanel>
+						<Label Height="30"
 							   Width="130"
-							   Height = "50"
-							   TextAlignment="Center"
-							   Text="{Binding Path=playerName}"
 							   FontSize="14"
 							   FontWeight="Bold"
-							   TextWrapping="WrapWithOverflow"
-							   />
-					</Label>
+							   Content="Player's Turn: "
+							/>
+						<Label Width="130"
+							  x:Name="lblCurrentPlayer"						   
+							   Height = "30"
+							   FontSize="14"
+							  HorizontalContentAlignment="Center">
+
+						</Label>
+					</StackPanel>
 
 					<Label x:Name="lblCountdown"
 							ContentStringFormat="Move Timer: {0}"
 							FontWeight="Bold"
 							HorizontalContentAlignment="Center"
 							FontSize="18"
-							Content=""
 						   />
-
-					<Button 
-						Content="Test1"
-					/>
-
+					<StackPanel>
+						<Label x:Name="lblWhiteCaptures"
+							Content="{Binding Path=WhiteCaptureCount}"
+							   ContentStringFormat="White's Captures: {0}"/>
+						<Label x:Name="lblNotWhiteCaptures"
+							Content="{Binding Path=NotWhiteCaptureCount}"
+							   ContentStringFormat="Black's Captures: {0}"/>
+					</StackPanel>
 					<Button 
 						Content="Test2"
 						/>
@@ -306,20 +337,21 @@
 					   Background="Black"
 					   />-->
 
+			<Grid Margin="20 0 0 0">
+				<UniformGrid x:Name="mainGrid"
+							 Background="Transparent"					  
+							 Panel.ZIndex="4" 
+							 HorizontalAlignment="Center"
+							 VerticalAlignment="Center"
+							 >
+				</UniformGrid>
 
-			<UniformGrid x:Name="mainGrid"
-						 Background="Transparent"					 
-						 Panel.ZIndex="2" 
-						 HorizontalAlignment="Center"
-						 VerticalAlignment="Center"
-						 >
-			</UniformGrid>
-
-			<Grid x:Name="overlayGrid"
-					Panel.ZIndex="1"
-					HorizontalAlignment="Center"
-					VerticalAlignment="Center"
-				  >
+				<Grid x:Name="overlayGrid"
+						Panel.ZIndex="1"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Center"
+					  >
+				</Grid>
 			</Grid>
 		</StackPanel>
 

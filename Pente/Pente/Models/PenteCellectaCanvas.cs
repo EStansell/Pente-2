@@ -1,10 +1,8 @@
 ﻿using Pente.Controllers;
+using Pente.Converters;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -21,48 +19,29 @@ namespace Pente.Models
 	/// and the Pente Controller back-end.	
 	/// </summary>
 	[Serializable]
-	public class PenteCellectaCanvas : Canvas
+	public class PenteCellectaCanvas : INotifyPropertyChanged
     {
+		[field:NonSerialized]
+		public event PropertyChangedEventHandler PropertyChanged;
 		public static int CELL_HEIGHT { get; set; }
 		public static int CELL_WIDTH { get; set; }
 		public int XPos { get; }
         public int YPos { get; }
-		public static bool IsWhiteColor { get; set; } = true;
-
-        private PenteController penteController;
-
-        private Shape shape;
-
-        private bool? isWhitePlayer;
-
-        public bool? IsWhitePlayer
+		private PenteController penteController;		
+		private bool? isWhitePlayer;
+		
+		public bool? IsWhitePlayer
         {
-            get { return isWhitePlayer;}
+            get { return isWhitePlayer; }
             set {
-                Background = Brushes.Transparent;
-                Opacity = 100;
-                switch (value)
-                {
-                    case true:
-                        // place/show a white piece
-                        shape.Fill = Brushes.White;
-                        break;
-                    case false:
-                        shape.Fill = Brushes.Black;
-                        break;
-                    default:
-                        shape.Fill = Brushes.Transparent;
-                        break;
-                }
                 isWhitePlayer = value;
+				FieldChanged();
             }
         }
-
+		
 
         public PenteCellectaCanvas(int xPos, int yPos, PenteController penteController, int cellHeight, int cellWidth)
 		{
-            CreatePiece();
-
 			CELL_HEIGHT = cellHeight;
 			CELL_WIDTH = cellWidth;
 
@@ -71,35 +50,55 @@ namespace Pente.Models
             this.penteController = penteController;
             this.penteController.PutCanvas(XPos, YPos, this);
 			// subscribe function to the mouse down event 
-			PreviewMouseDown += ProcessCanvas_Click;
-			MouseEnter += ProcessCanvas_Hover;
-			MouseLeave += ProcessCanvas_Hover;
-
 		}
 
-        /// <summary>
-        /// The function which controls the interaction with a gameboard Canvas
-        /// </summary>
-        private void ProcessCanvas_Click(object sender, MouseButtonEventArgs e)
+
+		protected void FieldChanged([CallerMemberName] string field = null)
+		{
+			if (PropertyChanged != null)
+			{
+				PropertyChanged(this, new PropertyChangedEventArgs(field));
+			}
+		}
+
+
+		/// <summary>
+		/// The function which controls the interaction with a gameboard Canvas
+		/// </summary>
+		public void ProcessCanvas_Click(object sender, MouseButtonEventArgs e)
         {
             // cast our object back into a Canvas that we can manipulate
             Canvas canvas = (Canvas)sender;
 
             if(penteController.IsValidOption(XPos, YPos))
             {
-                penteController.AttemptPlacement(XPos, YPos);
+				canvas.Opacity = 1.0;
+				canvas.Background = Brushes.Transparent;
+				penteController.AttemptPlacement(XPos, YPos);
+				UpdateChildShape(canvas);
             }
 		}
 
-        public bool CanvaseMouseOverTest(bool aName)
-        {
-            return aName;
-        }
+        
+		private void UpdateChildShape(Canvas canvas)
+		{
+			Ellipse child = (Ellipse)canvas.Children[0];
+			if (isWhitePlayer == null)
+			{
+				child.Fill = Brushes.Transparent;
+			}
+			else
+			{
+				child.Fill = IsWhitePlayer == true ? Brushes.White : Brushes.Black;
+				child.Opacity = 100.0;
+			}
+		}
+
 
 		/// <summary>
 		/// NEEDS SUMMARY
 		/// </summary>
-		private void ProcessCanvas_Hover(object sender, System.Windows.Input.MouseEventArgs e)
+		public void ProcessCanvas_Hover(object sender, System.Windows.Input.MouseEventArgs e)
 		{
 			// get our canvas to manipulate
 			Canvas canvas = (Canvas)sender;
@@ -120,23 +119,11 @@ namespace Pente.Models
                     CanvaseMouseOverTest(false);
                 }
             }
-
-			
 		}
-
-        private void CreatePiece()
-        {
-            Point point = new Point((this.Width / 2), (this.Height / 2));
-            shape = new Ellipse()
-            {
-                Width = CELL_WIDTH,
-                Height = CELL_HEIGHT,
-                Fill = Brushes.Transparent
-            };
-
-            SetLeft(shape, point.X);
-            SetTop(shape, point.Y);
-            Children.Add(shape);
-        }
+		public bool CanvaseMouseOverTest(bool aName)
+		{
+			return aName;
+		}
+		
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using Pente.Controllers;
+using Pente.Converters;
 using Pente.Models;
 using System;
 using System.IO;
@@ -7,7 +8,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace Pente
@@ -22,8 +25,9 @@ namespace Pente
 		private OpenFileDialog fileOpener = new OpenFileDialog();
 		private string fileDialogFilter = "Pente Game (*.pente)|*.pente*";
 		private string filePath = null;
-		private static int moveTime = 20;
 		private static DispatcherTimer countdownTimer = new DispatcherTimer();
+		
+		private static int moveTime = 20;
 		private const int CELL_WIDTH = 20;
 		private const int CELL_HEIGHT = 20;
 
@@ -71,18 +75,22 @@ namespace Pente
 				for (int col = 0; col < GameBoardColumnCount; col++)
 				{
 					// create the base label object that will interact with the players
-					PenteCellectaCanvas canvas = new PenteCellectaCanvas(col, row, penteController, CELL_HEIGHT, CELL_WIDTH) {						
-						Background = Brushes.Transparent								
-					};
+					PenteCellectaCanvas cell = new PenteCellectaCanvas(col, row, penteController, CELL_HEIGHT, CELL_WIDTH);
+					Canvas canvas = CreateCanvas(cell);
+				
 					// add the label to the grid
 					mainGrid.Children.Add(canvas);					
 				} // end inner for loop
 			} // end outer for loop 
-			lblCurrentPlayer.Text = $"Current Player: {penteController.CurrentPlayerName}";
+			Binding binding1 = new Binding("CurrentPlayerName")
+			{
+				Source = penteController
+			};
+			lblCurrentPlayer.SetBinding(ContentProperty, binding1);
 		}
 
 
-		private void SetGridSize()
+		private void SetElementSizes()
 		{
 			// Pente gameboard size is 19x19 cells by standard, make our grid have this size rows/columns
 			mainGrid.Columns = GameBoardColumnCount;
@@ -93,8 +101,8 @@ namespace Pente
 			mainGrid.Height = (CELL_HEIGHT) * GameBoardRowCount;
 
 			// set adequate window size to fit our label grid
-			mainWindow.MinWidth = mainGrid.Width + (CELL_WIDTH * 2);
-			mainWindow.MinHeight = mainGrid.Height + (CELL_HEIGHT * 2);
+			//mainWindow.Width = (mainGrid.Width + (CELL_WIDTH * 2)) + 150;
+			//mainWindow.Height = (mainGrid.Height + (CELL_HEIGHT * 2)) + 150;
 
 			// set adequate overlayGrid size
 			overlayGrid.Width = (GameBoardColumnCount - 1) * CELL_WIDTH;
@@ -137,7 +145,7 @@ namespace Pente
 			GameBoardColumnCount = (int)WidthSlider.Value;
 			GameBoardRowCount = (int)HeightSlider.Value;
 			penteController = new PenteController((int)WidthSlider.Value, (int)HeightSlider.Value, PlayerOneNameBox.Text, PlayerTwoNameBox.Text);
-			SetGridSize();
+			SetElementSizes();
 			CreateGame();
 		}
 
@@ -149,13 +157,28 @@ namespace Pente
 			{
 				CreateGrid();
 			}
-
 			CreateOverlay();
 
 			StartingMenuGrid.Visibility = Visibility.Collapsed;
 			overlayGrid.Visibility = Visibility.Visible;
 			mainGrid.Visibility = Visibility.Visible;
 			penteController.PlaceFirstPiece();
+
+			Binding binding1 = new Binding("WhiteCaptureCount")
+			{
+				Source = penteController,
+				StringFormat = $"{penteController.whitePlayer.Name} Captured: {0}"
+			};
+			lblWhiteCaptures.SetBinding(ContentProperty, binding1);
+
+			Binding binding2 = new Binding("NotWhiteCaptureCount")
+			{
+				Source = penteController,
+				StringFormat = $"{penteController.notWhitePlayer.Name} Captured: {0}"
+			};
+			lblNotWhiteCaptures.SetBinding(ContentProperty, binding2);
+
+			SetTimer();
 		}
 
 
@@ -183,7 +206,13 @@ namespace Pente
 						// deserialize and re-assign objects here
 						penteController = (PenteController)formatter.Deserialize(dataFileStream);
 						LoadSavedGame(penteController.GetGameBoard());
-						lblCurrentPlayer.Text = $"Current Player: {penteController.CurrentPlayerName}";
+
+						Binding binding1 = new Binding("CurrentPlayerName")
+						{
+							Source = penteController,
+							StringFormat = $"Current Player: {0}"
+						};
+						lblCurrentPlayer.SetBinding(ContentProperty, binding1);
 					}
 				}
 			}
@@ -236,21 +265,30 @@ namespace Pente
 
 		public void LoadSavedGame(PenteCellectaCanvas[,] board)
 		{
+			mainGrid.Children.Clear();			
+			overlayGrid.Children.Clear();
+			overlayGrid.ColumnDefinitions.Clear();
+			overlayGrid.RowDefinitions.Clear();
+
 			// if the board is not null (the game has been started)
 			if (board != null)
 			{
 				// re-set grid/column counts
+				PlayerOneNameBox.Text = penteController.whitePlayer.Name;
+				PlayerTwoNameBox.Text = penteController.notWhitePlayer.Name;
 				GameBoardColumnCount = board.GetLength(0);
 				GameBoardRowCount = board.GetLength(1);
 				
 				// re-set sizes now that we have the dimensions
-				SetGridSize();
+				SetElementSizes();
 
 				// re-populate the game grid
 				int size = 0;
 				
-				foreach (PenteCellectaCanvas canvas in board)
+				foreach (PenteCellectaCanvas cell in board)
 				{
+					Canvas canvas = CreateCanvas(cell);
+
 					mainGrid.Children.Add(canvas);
 					size++;
 				}
@@ -289,6 +327,7 @@ namespace Pente
 			countdownTimer.Start();
 		}
 
+
 		private void CountdownTimer_Tick(object sender, EventArgs e)
 		{
 			moveTime--;
@@ -296,9 +335,11 @@ namespace Pente
 			{
 				// time is up! change turns
 				countdownTimer.Stop();
+				lblUpdateUser.Text = $"{penteController.CurrentPlayerName}'s time is up!\nNext player's turn starts now.";
 				penteController.MoveTimeElapsed();
-				// show popup when the time is up?
-
+				moveTime = 20;
+				countdownTimer.Start();
+				lblCountdown.Foreground = Brushes.Black;
 			}
 
 			if (moveTime == 5)
@@ -309,9 +350,74 @@ namespace Pente
 			lblCountdown.Content = $" {moveTime.ToString()}";
 		}
 
+
 		private void Instructions_Click(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
 		{
-
+			string message = "";
+			MessageBox.Show(message, "caption", MessageBoxButton.OK);
 		}
+
+
+		private Ellipse CreatePiece()
+		{
+			Point point = new Point(0, 0);
+			Ellipse shape = new Ellipse()
+			{
+				Width = CELL_WIDTH,
+				Height = CELL_HEIGHT,
+				Fill = Brushes.Transparent
+			};
+
+			Canvas.SetLeft(shape, point.X);
+			Canvas.SetTop(shape, point.Y);
+
+			return shape;
+		}
+
+
+		private Canvas CreateCanvas(PenteCellectaCanvas cell)
+		{
+			// set a binding converter to get opacity based on an empty or filled cell
+			Binding opacityBinding = new Binding("IsWhitePlayer")
+			{
+				Source = cell,
+				Converter = new BoolToOpacityConverter()
+			};
+
+			// set a binding converter to get piece color based on an empty or filled cell
+			Binding colorBinding = new Binding("IsWhitePlayer")
+			{
+				Source = cell,
+				Converter = new BoolToBrushConverter(),			
+			};
+
+			// create the canvas for the grid
+			Canvas canvas = new Canvas()
+			{
+				DataContext = cell,
+				Background = Brushes.Transparent
+			};
+
+			// create the shape to be a child of the canvas, representing a game board piece
+			Ellipse s = CreatePiece();
+			colorBinding.ConverterParameter = s;
+			// set shape color based on current status of the piece (open, player1, or player2)
+			s.SetBinding(ForegroundProperty, colorBinding);
+
+			// set opacity binding for the canvas and piece based on who controls it
+			canvas.SetBinding(OpacityProperty, opacityBinding);
+			s.SetBinding(OpacityProperty, opacityBinding);
+
+			// add shape
+			canvas.Children.Add(s);
+			
+			// subscribe to action handlers
+			canvas.PreviewMouseDown += cell.ProcessCanvas_Click;
+			canvas.MouseEnter += cell.ProcessCanvas_Hover;
+			canvas.MouseLeave += cell.ProcessCanvas_Hover;
+
+			return canvas;
+		}
+
 	} // end main class
 }

@@ -1,21 +1,18 @@
 ﻿using Pente.Models;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pente.Controllers
 {
 	[Serializable]
     public class PenteController : INotifyPropertyChanged
     {
+		[field:NonSerialized]
 		public event PropertyChangedEventHandler PropertyChanged;
 		private PenteCellectaCanvas[,] board;
-        private Player whitePlayer = null;
-        private Player notWhitePlayer = null;
+        public Player whitePlayer = null;
+        public Player notWhitePlayer = null;
         private int[] boardCenter;
         private int currentRound = 1;
 		private int notWhiteCaptureCount = 0;
@@ -198,7 +195,8 @@ namespace Pente.Controllers
 
         public bool IsValidOption(int x, int y)
         {
-            bool validOption = (board[x, y].IsWhitePlayer == null);
+			//Console.WriteLine(x + " " + y);            
+			bool validOption = (board[x, y].IsWhitePlayer == null);
             if (!isWhitePlayersTurn && currentRound == 2)
             {
                 int xCenter = boardCenter[0];
@@ -218,7 +216,7 @@ namespace Pente.Controllers
 
         public void PutCanvas(int x,int y, PenteCellectaCanvas canvas)
         {
-            Console.WriteLine(x + " " + y);
+            //Console.WriteLine(x + " " + y);
             board[x, y] = canvas;
         }
 
