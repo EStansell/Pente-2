@@ -11,7 +11,6 @@ using System.Windows.Threading;
 
 namespace Pente.Models
 {
-
 	/// <summary>
 	/// This class represents the main game board which provides basic
 	/// functionality of the Pente game.
@@ -47,7 +46,7 @@ namespace Pente.Models
 		{
 			CELL_HEIGHT = cellHeight;
 			CELL_WIDTH = cellWidth;
-
+			
 			XPos = xPos;
             YPos = yPos;
             this.penteController = penteController;
