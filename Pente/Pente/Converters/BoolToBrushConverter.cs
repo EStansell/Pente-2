@@ -6,6 +6,9 @@ using System.Windows.Shapes;
 
 namespace Pente.Converters
 {	
+	/// <summary>
+	/// This is used to convert the current cell's IsWhitePlayer bool? value to the brush color that the ellipse child should have
+	/// </summary>
 	[Serializable]
 	public class BoolToBrushConverter : IValueConverter
 	{
