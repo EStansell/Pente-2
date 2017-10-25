@@ -15,38 +15,41 @@ using System.Windows.Threading;
 
 namespace Pente
 {
+	
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
+	/// A go-between for app functionality
+	/// Responsibilities are:
+	///		Creation of the game board and all aspects therein
+	///		Controls the timer
+	///		Controls saving and loading game instances
+	///		Helps make the UI interactive
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		[field: NonSerialized]
+		private static DispatcherTimer countdownTimer = new DispatcherTimer();
+		private static PenteController penteController = new PenteController(9, 9, null, null);
+		public int moveTime = 20;
+		private const int CELL_WIDTH = 20;
+		private const int CELL_HEIGHT = 20;
 		private BinaryFormatter formatter = new BinaryFormatter();
 		private SaveFileDialog fileSaver = new SaveFileDialog();
 		private OpenFileDialog fileOpener = new OpenFileDialog();
-		private string fileDialogFilter = "Pente Game (*.pente)|*.pente*";
+		private string fileDialogFilter = "Pente Game (*.pente)|*.pente* |All Files (*.*)|(*.*)";
 		private string filePath = null;
-		private static DispatcherTimer countdownTimer = new DispatcherTimer();
-		
-		private static int moveTime = 20;
-		private const int CELL_WIDTH = 20;
-		private const int CELL_HEIGHT = 20;
 		private string name1 = null;
 		private string name2 = null;
-
-
 		public int GameBoardColumnCount { get; set; } = 9;
-        public int GameBoardRowCount { get; set; } = 9;
-        
-        // Create controller
-        private static PenteController penteController;
+		public int GameBoardRowCount { get; set; } = 9;
 
 		public UniformGrid GetMainGrid
-        {
-            get
-            {
-                return mainGrid;
-            }
-        }
+		{
+			get
+			{
+				return mainGrid;
+			}
+		}
 
 		public Grid GetOverlayGrid
 		{
@@ -57,9 +60,12 @@ namespace Pente
 		}
 
 
-        public MainWindow()
-        {
-            InitializeComponent();
+		/// <summary>
+		/// This contructor
+		/// </summary>
+		public MainWindow()
+		{
+			InitializeComponent();
 			fileOpener.Filter = fileDialogFilter;
 			fileSaver.Filter = fileDialogFilter;
 		}
@@ -70,7 +76,7 @@ namespace Pente
 		/// Holds pieces and data relevent to game decisions.
 		/// </summary>
 		public void CreateGrid()
-		{			
+		{
 			// for each row in the grid
 			for (int row = 0; row < GameBoardRowCount; row++)
 			{
@@ -81,9 +87,9 @@ namespace Pente
 					PenteCellectaCanvas cell = new PenteCellectaCanvas(col, row, penteController, CELL_HEIGHT, CELL_WIDTH);
 					cell.timer = countdownTimer;
 					Canvas canvas = CreateCanvas(cell);
-				
+
 					// add the label to the grid
-					mainGrid.Children.Add(canvas);					
+					mainGrid.Children.Add(canvas);
 				} // end inner for loop
 			} // end outer for loop 
 			Binding binding1 = new Binding("CurrentPlayerName")
@@ -94,6 +100,9 @@ namespace Pente
 		}
 
 
+		/// <summary>
+		/// Sets the dimensions of the grids
+		/// </summary>
 		private void SetElementSizes()
 		{
 			// Pente gameboard size is 19x19 cells by standard, make our grid have this size rows/columns
@@ -114,8 +123,11 @@ namespace Pente
 		}
 
 
-        public void CreateOverlay()
-        {
+		/// <summary>
+		/// Creates the grid overlay that will help "point" the user to where their piece will land
+		/// </summary>
+		public void CreateOverlay()
+		{
 			for (int i = 0; i < GameBoardColumnCount - 1; i++)
 			{
 				overlayGrid.ColumnDefinitions.Add(new ColumnDefinition());
@@ -127,33 +139,43 @@ namespace Pente
 			}
 
 			for (int col = 0; col < overlayGrid.ColumnDefinitions.Count; col++)
-            {
+			{
 				for (int row = 0; row < overlayGrid.RowDefinitions.Count; row++)
-                {
+				{
 					Border border = new Border()
 					{
 						BorderBrush = Brushes.White,
-						BorderThickness = new Thickness(1),				
-                    };
+						BorderThickness = new Thickness(1),
+					};
 
 					Grid.SetColumn(border, col);
 					Grid.SetRow(border, row);
-                    overlayGrid.Children.Add(border);                                         
-                }
-            }
+					overlayGrid.Children.Add(border);
+				}
+			}
 		}
 
 
+		/// <summary>
+		/// From the startup window, takes the values the user entered from the UIElements
+		/// and uses them to help create key game parameters
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void StartGameButtonClick(object sender, RoutedEventArgs e)
-
-
 		{
 			GameBoardColumnCount = (int)WidthSlider.Value;
 			GameBoardRowCount = (int)HeightSlider.Value;
-			penteController = new PenteController((int)WidthSlider.Value, (int)HeightSlider.Value, PlayerOneNameBox.Text, PlayerTwoNameBox.Text);
+			penteController = new PenteController(GameBoardColumnCount, GameBoardRowCount, PlayerOneNameBox.Text, PlayerTwoNameBox.Text);
 			SetElementSizes();
 			CreateGame();
 		}
+
+
+		/// <summary>
+		/// Stands up the main gaming window
+		/// Including label binding, grid creation, timer setting, and visibility modifications
+		/// </summary>
 		private void CreateGame()
 		{
 			// if at this point the main grid has no cavases, create them. otherwise, skip it
@@ -182,12 +204,17 @@ namespace Pente
 			};
 			lblNotWhiteCaptures.SetBinding(ContentProperty, binding2);
 
-			name1  = penteController.CurrentPlayerName;
+			name1 = penteController.CurrentPlayerName;
 
 			SetTimer();
 		}
 
 
+		/// <summary>
+		/// Closes the application without warning or prompt
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Close_Click(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
 		{
 			Close();
@@ -195,6 +222,11 @@ namespace Pente
 		}
 
 
+		/// <summary>
+		/// Opens a file dialog for the user to navigate to their saved game file
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Open_Click(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
 		{
 			bool? result = fileOpener.ShowDialog();
@@ -226,6 +258,12 @@ namespace Pente
 		}
 
 
+		/// <summary>
+		/// Saves the current state of the game in the already established location if it exists.
+		/// If the path is not yet set, the event is re-directed to the SaveAs_Click method.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Save_Click(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
 		{
 			// if we already have a path to save at
@@ -245,6 +283,11 @@ namespace Pente
 		}
 
 
+		/// <summary>
+		/// Opens a save dialog for the user to navigate to their desired save location
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void SaveAs_Click(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
 		{
 			// open save dialog for user to navigate to save location
@@ -270,61 +313,73 @@ namespace Pente
 		}
 
 
+		/// <summary>
+		/// Takes the deserialized controller and sets the cells back into the game board
+		/// Re-sets the game objects to their previous state
+		/// </summary>
+		/// <param name="board"></param>
 		public void LoadSavedGame(PenteCellectaCanvas[,] board)
 		{
-			mainGrid.Children.Clear();			
+			countdownTimer.Tick -= CountdownTimer_Tick;
+			mainGrid.Children.Clear();
 			overlayGrid.Children.Clear();
 			overlayGrid.ColumnDefinitions.Clear();
 			overlayGrid.RowDefinitions.Clear();
 
 			// if the board is not null (the game has been started)
-			if (board != null)
+			if (!penteController.whitePlayer.Name.Equals("[Unknown]"))
 			{
 				// re-set grid/column counts
 				PlayerOneNameBox.Text = penteController.whitePlayer.Name;
 				PlayerTwoNameBox.Text = penteController.notWhitePlayer.Name;
-				GameBoardColumnCount = board.GetLength(0);
 				GameBoardRowCount = board.GetLength(1);
-				
+
 				// re-set sizes now that we have the dimensions
 				SetElementSizes();
 
 				// re-populate the game grid
-				int size = 0;
-				
-				foreach (PenteCellectaCanvas cell in board)
+				for (int x = 0; x < board.GetLength(1); x++)
 				{
-					Canvas canvas = CreateCanvas(cell);
-
-					mainGrid.Children.Add(canvas);
-					size++;
+					for (int y = 0; y < board.GetLength(0); y++)
+					{
+						Canvas canvas = CreateCanvas(board[y, x]);
+						mainGrid.Children.Add(canvas);
+					}
 				}
 
-				if (size != board.Length)
-					throw new Exception("SIZES DON'T MATCH");
-
 				CreateGame();
-
-				// start the timer?
 			}
 
 			// if the game board is null, start the app as if it is the first run			
 		}
 
 
+		/// <summary>
+		/// Helper method to handle instant label updates for enhanced UX when choosing grid size
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void HeightSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
 		{
 			HeightValueLabel.Content = e.NewValue;
 		}
 
 
+		/// <summary>
+		/// Helper method to handle instant label updates for enhanced UX when choosing grid size
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void WidthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
 		{
 			WidthValueLabel.Content = e.NewValue;
 		}
 
 
-		private void SetTimer()
+		/// <summary>
+		/// Set the "shot clock" so the client's friends don't take up too much time
+		/// </summary>
+		public void SetTimer()
 		{
 			countdownTimer.Tick += new EventHandler(CountdownTimer_Tick);
 			countdownTimer.Interval = new TimeSpan(0, 0, 1); // 1 second
@@ -334,6 +389,12 @@ namespace Pente
 			countdownTimer.Start();
 		}
 
+
+		/// <summary>
+		/// Handler which takes care of the "shot clock" tick events
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void CountdownTimer_Tick(object sender, EventArgs e)
 		{
 			moveTime--;
@@ -373,6 +434,11 @@ namespace Pente
 			lblCountdown.Content = $" {moveTime.ToString()}";
 		}
 
+
+		/// <summary>
+		/// Create the Canvas child object that will represent a game board piece
+		/// </summary>
+		/// <returns>The Ellipse object</returns>
 		private Ellipse CreatePiece()
 		{
 			Point point = new Point(0, 0);
@@ -390,6 +456,11 @@ namespace Pente
 		}
 
 
+		/// <summary>
+		/// Create canvas object with the "cell" argument as its datacontext
+		/// </summary>
+		/// <param name="cell">The PenteCellecaCanvas data to be bound to the canvas</param>
+		/// <returns>A Canvas object to be used elsewhere</returns>
 		private Canvas CreateCanvas(PenteCellectaCanvas cell)
 		{
 			// set a binding converter to get opacity based on an empty or filled cell
@@ -403,7 +474,7 @@ namespace Pente
 			Binding colorBinding = new Binding("IsWhitePlayer")
 			{
 				Source = cell,
-				Converter = new BoolToBrushConverter()			
+				Converter = new BoolToBrushConverter()
 			};
 
 			// create the canvas for the grid
@@ -425,7 +496,7 @@ namespace Pente
 
 			// add shape
 			canvas.Children.Add(s);
-			
+
 			// subscribe to action handlers
 			canvas.PreviewMouseDown += cell.ProcessCanvas_Click;
 			canvas.MouseEnter += cell.ProcessCanvas_Hover;
@@ -434,12 +505,18 @@ namespace Pente
 			return canvas;
 		}
 
-		private void MenuItem_Click(object sender, RoutedEventArgs e)
+
+		/// <summary>
+		/// Show the Instructions by way of pop-up window
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void ShowInstructions_Click(object sender, RoutedEventArgs e)
 		{
 			string message = "Win by placing five (or more) of your stones in a row, vertically,\n " +
 							"horizontally, or diagonally, with no empty points between them.\n " +
 							"Or, win by capturing five (or more) pairs of your opponent's stones.";
 			MessageBox.Show(message);
 		}
-	} // end main class
+	}
 }

@@ -4,13 +4,16 @@ using System.Windows.Controls.Primitives;
 using Pente.Models;
 using Pente.Controllers;
 
+
 namespace PenteUnitTest
 {
     [TestClass]
     public class UnitTest1
     {
-        private MainWindow main = new MainWindow();
-
+        public MainWindow main = new MainWindow();
+        /// <summary>
+        /// Test to see if we could build a successfull grid with proper values
+        /// </summary>
         [TestMethod]
         public void GridCreationTest()
         {
@@ -23,11 +26,15 @@ namespace PenteUnitTest
             Assert.AreEqual(expected, childCount, "Amount of children did not match what was expected!");
 
         }
-
+        /// <summary>
+        /// Test to see is Place a piece on to the grid works
+        /// </summary>
         [TestMethod]
         public void GridPiecePlacementTest()
         {
             PenteController pc = new PenteController(19, 19, "Tester1", "Tester2");
+
+            pc.isTesting = true;
             for (int row = 0; row < 19; row++)
             {//start of first loo0p
 
@@ -39,13 +46,22 @@ namespace PenteUnitTest
                 }//end of second loop
 
             }//end of first loop
-            Assert.AreEqual(true, pc.AttemptPlacement(4, 7), "The Piece Was not Places");
+            pc.PlaceFirstPiece();
+            pc.AttemptPlacement(4, 7);
+            pc.AttemptPlacement(0, 8);
+            Assert.AreEqual(true, pc.board[4, 7].IsWhitePlayer, "The Piece Was not Places");
+            Assert.AreEqual(true, !pc.board[0, 8].IsWhitePlayer, "Piece was not Placed");
         }
+        /// <summary>
+        /// Testing to see if the Player 1's move is in the center of the grid
+        /// </summary>
         [TestMethod]
-        public void FirstPieceCentere()
+        public void FirstPieceCenter()
         {
             //Checking for Center piece of Grid size 9x9
             PenteController pc = new PenteController(9, 9, "Tester1", "Tester2");
+            pc.isTesting = true;
+
             Assert.AreEqual(4, pc.boardCenter[0], $"X2 Not Middle Board Center is { pc.boardCenter[0]}");
             Assert.AreEqual(4, pc.boardCenter[1], $"Y2 Not Middle Board Center is {pc.boardCenter[1]}");
 
@@ -57,11 +73,15 @@ namespace PenteUnitTest
             //Checking to see if Black piece is first
             Assert.AreEqual(false, pcc.isWhitePlayersTurn, "Black Piece is Not First");
         }
-
+        /// <summary>
+        /// Test to see if users selected grid size is valid
+        /// </summary>
         [TestMethod]
         public void ValidGridSize()
         {
             PenteController pc = new PenteController(9, 39, "Tester1", "Tester2");
+            pc.isTesting = true;
+
             Assert.AreEqual(true, pc.xIsRightSize % 2 == 1, "xSize is not an Odd Number");
             Assert.AreEqual(true, pc.yIsRightSize % 2 == 1, "ySize is not an Odd Number");
             Assert.AreEqual(true, pc.xIsRightSize >= 9 && pc.xIsRightSize <= 39, "xSize does not fit between 9-39");
@@ -69,18 +89,15 @@ namespace PenteUnitTest
 
         }
 
-        [TestMethod]
-        public void CanCaptureStones()
-        {
-            PenteController pc = new PenteController(9, 9, "Tester1", "Tester2");
-
-
-        }
-
+        /// <summary>
+        /// Test to see if 5 pieces of the same color in a row horizontally will win
+        /// </summary>
         [TestMethod]
         public void checkHorizontalWinTest()
         {
             PenteController pc = new PenteController(9, 9, "TESTER1", "TESTER2");
+            pc.isTesting = true;
+
             for (int row = 0; row < 9; row++)
             {//start of first loo0p
 
@@ -105,18 +122,23 @@ namespace PenteUnitTest
             pc.AttemptPlacement(3, 7);//white
             pc.AttemptPlacement(8, 1);//black
             pc.AttemptPlacement(4, 7);//white
-            Assert.AreEqual(5, pc.checkWin(3, 7, true), "Vertical Win Does Not Work");
-            Assert.AreEqual(5, pc.checkWin(0, 7, true), "Vertical Win Does Not Work");
-            Assert.AreEqual(5, pc.checkWin(1, 7, true), "Vertical Win Does Not Work");
-            Assert.AreEqual(5, pc.checkWin(2, 7, true), "Vertical Win Does Not Work");
-            Assert.AreEqual(5, pc.checkWin(4, 7, true), "Vertical Win Does Not Work");
+            Assert.AreEqual(5, pc.CheckWin(3, 7, true), "Vertical Win Does Not Work");
+            Assert.AreEqual(5, pc.CheckWin(0, 7, true), "Vertical Win Does Not Work");
+            Assert.AreEqual(5, pc.CheckWin(1, 7, true), "Vertical Win Does Not Work");
+            Assert.AreEqual(5, pc.CheckWin(2, 7, true), "Vertical Win Does Not Work");
+            Assert.AreEqual(5, pc.CheckWin(4, 7, true), "Vertical Win Does Not Work");
 
         }
-
+        /// <summary>
+        /// Test to see if 5 pieces of the same color in a row vertically will win
+        /// </summary>
         [TestMethod]
         public void checkVerticalWinTest()
         {
             PenteController pc = new PenteController(9, 9, "TESTER1", "TESTER2");
+
+            pc.isTesting = true;
+
             for (int row = 0; row < 9; row++)
             {
 
@@ -138,17 +160,21 @@ namespace PenteUnitTest
             pc.AttemptPlacement(7, 3);//white
             pc.AttemptPlacement(8, 1);//black
             pc.AttemptPlacement(7, 4);//white
-            Assert.AreEqual(5, pc.checkWin(7, 0, true), "Horizontal Win Does Not Work");
-            Assert.AreEqual(5, pc.checkWin(7, 1, true), "Horizontal Win Does Not Work");
-            Assert.AreEqual(5, pc.checkWin(7, 2, true), "Horizontal Win Does Not Work");
-            Assert.AreEqual(5, pc.checkWin(7, 3, true), "Horizontal Win Does Not Work");
-            Assert.AreEqual(5, pc.checkWin(7, 4, true), "Horizontal Win Does Not Work");
+            Assert.AreEqual(5, pc.CheckWin(7, 0, true), "Horizontal Win Does Not Work");
+            Assert.AreEqual(5, pc.CheckWin(7, 1, true), "Horizontal Win Does Not Work");
+            Assert.AreEqual(5, pc.CheckWin(7, 2, true), "Horizontal Win Does Not Work");
+            Assert.AreEqual(5, pc.CheckWin(7, 3, true), "Horizontal Win Does Not Work");
+            Assert.AreEqual(5, pc.CheckWin(7, 4, true), "Horizontal Win Does Not Work");
         }
-
+        /// <summary>
+        /// Test to see if 5 pieces of the same color in a row diagonally will win
+        /// </summary>
         [TestMethod]
         public void checkDiagonalWinTest()
         {
-            PenteController pc = new PenteController(9, 9, "TESTER1", "TESTER2");
+            PenteController pc = new PenteController(9, 9, "tester1", "tester2");
+            pc.isTesting = true;
+
             for (int row = 0; row < 9; row++)
             {
                 for (int col = 0; col < 9; col++)
@@ -162,25 +188,29 @@ namespace PenteUnitTest
             //Diagonal
 
             pc.PlaceFirstPiece();//black
-            pc.AttemptPlacement(7,4);//white
-            pc.AttemptPlacement(1,1);//black
-            pc.AttemptPlacement(6,5);//white
-            pc.AttemptPlacement(8,0);//black
-            pc.AttemptPlacement(5,6);//white
-            pc.AttemptPlacement(4,0);//black
-            pc.AttemptPlacement(4,7);//white
-            pc.AttemptPlacement(0,4);//black
-            pc.AttemptPlacement(3,8);//white 
+            pc.AttemptPlacement(7, 4);//white
+            pc.AttemptPlacement(1, 1);//black
+            pc.AttemptPlacement(6, 5);//white
+            pc.AttemptPlacement(8, 0);//black
+            pc.AttemptPlacement(5, 6);//white
+            pc.AttemptPlacement(4, 0);//black
+            pc.AttemptPlacement(4, 7);//white
+            pc.AttemptPlacement(0, 4);//black
+            pc.AttemptPlacement(3, 8);//white 
 
-            Assert.AreEqual(5, pc.checkWin(7,4, true), $"Diagonal Win Does Not Work, Highest Count Is: {pc.checkWin(0, 1, true)}");
-            Assert.AreEqual(5, pc.checkWin(3,8, true), $"Diagonal Win Does Not Work, Highest Count Is: {pc.checkWin(3, 8, true)}");
+            Assert.AreEqual(5, pc.CheckWin(7, 4, true), $"Diagonal Win Does Not Work, Highest Count Is: {pc.CheckWin(0, 1, true)}");
+            Assert.AreEqual(5, pc.CheckWin(3, 8, true), $"Diagonal Win Does Not Work, Highest Count Is: {pc.CheckWin(3, 8, true)}");
 
         }
-
+        /// <summary>
+        /// Testing to see if Capturing stones vertically works
+        /// </summary>
         [TestMethod]
         public void CaptureVerticalStonesTest()
         {
             PenteController pc = new PenteController(9, 9, "TESTER1", "TESTER2");
+            pc.isTesting = true;
+
             for (int row = 0; row < 9; row++)
             {
 
@@ -202,10 +232,15 @@ namespace PenteUnitTest
             Assert.AreEqual(null, pc.board[0, 4].IsWhitePlayer, "Vertical Capture Stones Does Not Work");
 
         }
+        /// <summary>
+        /// Testing to see if Capturing stones horizontally works
+        /// </summary>
         [TestMethod]
         public void CaptureHorizontalStoneTest()
         {
             PenteController pc = new PenteController(9, 9, "TESTER1", "TESTER2");
+            pc.isTesting = true;
+
             for (int row = 0; row < 9; row++)
             {
 
@@ -226,11 +261,15 @@ namespace PenteUnitTest
             Assert.AreEqual(null, pc.board[3, 1].IsWhitePlayer, "Horizontal Capture Stones Does Not Work");
             Assert.AreEqual(null, pc.board[2, 1].IsWhitePlayer, "Horizontal Capture Stones Does Not Work");
         }
-
+        /// <summary>
+        /// Testing to see if Capturing stones diagonally works
+        /// </summary>
         [TestMethod]
         public void CaptureDiagonalStoneTest()
         {
             PenteController pc = new PenteController(9, 9, "TESTER1", "TESTER2");
+            pc.isTesting = true;
+
             for (int row = 0; row < 9; row++)
             {
 
@@ -252,11 +291,16 @@ namespace PenteUnitTest
             Assert.AreEqual(null, pc.board[2, 2].IsWhitePlayer, "Diagonal Capture Stones Does Not Work");
             Assert.AreEqual(null, pc.board[3, 3].IsWhitePlayer, "Diagonal Capture Stones Does Not Work");
         }
-
+        /// <summary>
+        /// Testing to see if a player that captures 5 pairs will win.
+        /// </summary>
         [TestMethod]
         public void CaptureFiveWinsTest()
         {
             PenteController pc = new PenteController(9, 9, "TESTER1", "TESTER2");
+            pc.isTesting = true;
+
+
             for (int row = 0; row < 9; row++)
             {
 
@@ -277,11 +321,11 @@ namespace PenteUnitTest
             pc.AttemptPlacement(0, 6);//black
             pc.AttemptPlacement(0, 4);//white
             pc.AttemptPlacement(0, 3);//black
-             
-            pc.AttemptPlacement(3,7);//white
-            pc.AttemptPlacement(2,7);//black
-            pc.AttemptPlacement(4,7);//white
-            pc.AttemptPlacement(5,7);//black
+
+            pc.AttemptPlacement(3, 7);//white
+            pc.AttemptPlacement(2, 7);//black
+            pc.AttemptPlacement(4, 7);//white
+            pc.AttemptPlacement(5, 7);//black
 
             pc.AttemptPlacement(7, 3);//white
             pc.AttemptPlacement(7, 2);//black
@@ -297,14 +341,18 @@ namespace PenteUnitTest
             pc.checkCapture(0, 6, false);
             pc.checkCapture(6, 7, false);
             pc.checkCapture(7, 2, false);
-            pc.checkCapture(8, 0, false); 
+            pc.checkCapture(8, 0, false);
             Assert.AreEqual(5, pc.NotWhiteCaptureCount, $"Capturing 5 Pairs Win Does Not Work Count Is: {pc.NotWhiteCaptureCount}");
         }
-
+        /// <summary>
+        /// Testing to see if users entered name will be stored
+        /// </summary> 
         [TestMethod]
         public void PlayerNameStoredTest()
         {
             PenteController pc = new PenteController(9, 9, "Boris", "Kyle");
+            pc.isTesting = true;
+
             for (int row = 0; row < 9; row++)
             {
 
@@ -314,14 +362,19 @@ namespace PenteUnitTest
                 }
 
             }
-            Assert.AreEqual(true, pc.whitePlayer.Name == "Boris", "Player One Name Not Stored");
-            Assert.AreEqual(true, pc.notWhitePlayer.Name == "Kyle", "Player One Name Not Stored");
+            Assert.AreEqual(true, pc.notWhitePlayer.Name == "Boris", "Player One Name Not Stored");
+            Assert.AreEqual(true, pc.whitePlayer.Name == "Kyle", "Player Two Name Not Stored");
 
         }
+        /// <summary>
+        /// Testing to see if Player 2's second move is not in the center box
+        /// </summary>
         [TestMethod]
         public void BlackSecondMoveOutOfBoundaryTest()
         {
             PenteController pc = new PenteController(9, 9, "Boris", "Kyle");
+            pc.isTesting = true;
+
             for (int row = 0; row < 9; row++)
             {
 
@@ -338,13 +391,135 @@ namespace PenteUnitTest
 
             Assert.AreEqual(null, !(pc.board[4, 3].IsWhitePlayer), "Black Cannot Place Piece In Boundary");
         }
+        /// <summary>
+        /// Testing to see if White Players turn will end after placing a piece and switch to Black Players turn
+        /// </summary>
         [TestMethod]
-        public void SwitchTurnsTest()
+        public void SwitchBlackToWhiteTurnsTest()
         {
+            PenteController pc = new PenteController(9, 9, "Boris", "Kyle");
+            pc.isTesting = true;
 
+            for (int row = 0; row < 9; row++)
+            {
+
+                for (int col = 0; col < 9; col++)
+                {
+                    PenteCellectaCanvas canvas = new PenteCellectaCanvas(row, col, pc, 10, 10);
+                }
+
+            }
+            pc.PlaceFirstPiece(); //black
+            pc.AttemptPlacement(2, 3);//white
+            Assert.AreEqual(false, pc.isWhitePlayersTurn, "Switching Turns DOes Not Work");
+
+
+        }
+        /// <summary>
+        ///  Testing to see if Black Players turn will end after placing a piece and switch to Whtie Players turn
+        /// </summary>
+        [TestMethod]
+        public void SwitchWhiteToBlackTurnsTest()
+        {
+            PenteController pc = new PenteController(9, 9, "Boris", "Kyle");
+            pc.isTesting = true;
+
+            for (int row = 0; row < 9; row++)
+            {
+
+                for (int col = 0; col < 9; col++)
+                {
+                    PenteCellectaCanvas canvas = new PenteCellectaCanvas(row, col, pc, 10, 10);
+                }
+
+            }
+            pc.PlaceFirstPiece();//black
+            pc.AttemptPlacement(2, 4);//white
+            pc.AttemptPlacement(4, 8);//black
+            Assert.AreEqual(false, !pc.isWhitePlayersTurn, "Switching Turns Does Not Work");
+
+
+        }
+        //[TestMethod]
+        //public void SaveTest()
+        //{
+        //    PenteController pc = new PenteController(9, 9, "Boris", "Kyle");
+
+        //}
+        /// <summary>
+        /// Testing to see if when a player has 3 pieces in a row, the program will alert the player that they have a "tria"
+        /// </summary>
+        [TestMethod]
+        public void TriaTest()
+        {
+            PenteController pc = new PenteController(9, 9, "Boris", "Kyle");
+            pc.isTesting = true;
+
+            for (int row = 0; row < 9; row++)
+            {
+
+                for (int col = 0; col < 9; col++)
+                {
+                    PenteCellectaCanvas canvas = new PenteCellectaCanvas(row, col, pc, 10, 10);
+                }
+
+            }
+
+            pc.PlaceFirstPiece();//black
+            pc.AttemptPlacement(0, 7);//white
+            pc.AttemptPlacement(0, 1);//black
+            pc.AttemptPlacement(1, 7);//white
+            pc.AttemptPlacement(0, 2);//black
+            pc.AttemptPlacement(2, 7);//white
+
+            pc.CheckWin(0, 7, true);
+            pc.Yell(true, 3);
+            Assert.AreEqual(true, pc.isTria, $"Tria Yell Does Not Work its {pc.isTria} ");
+        }
+        /// <summary>
+        ///  Testing to see if when a player has 4 pieces in a row, the program will alert the player that they have a "Tessera"
+        /// </summary>
+        [TestMethod]
+        public void TesseraTest()
+        {
+            PenteController pc = new PenteController(9, 9, "Boris", "Kyle");
+            pc.isTesting = true;
+
+            for (int row = 0; row < 9; row++)
+            {
+
+                for (int col = 0; col < 9; col++)
+                {
+                    PenteCellectaCanvas canvas = new PenteCellectaCanvas(row, col, pc, 10, 10);
+                }
+
+            }
+            pc.PlaceFirstPiece();//black
+            pc.AttemptPlacement(0, 7);//white
+            pc.AttemptPlacement(0, 1);//black
+            pc.AttemptPlacement(1, 7);//white
+            pc.AttemptPlacement(0, 2);//black
+            pc.AttemptPlacement(2, 7);//white
+            pc.AttemptPlacement(0, 3);//black
+            pc.AttemptPlacement(3, 7);//white
+
+            pc.CheckWin(0, 7, true);
+            pc.Yell(true, 4);
+            Assert.AreEqual(true, pc.isTessera, $"Tria Yell Does Not Work its {pc.isTessera} ");
+
+        }
+        /// <summary>
+        /// Testing to see if the timer will start at the start of the round
+        /// </summary>
+        [TestMethod]
+        public void SetTimerTest()
+        {
+            main.SetTimer();
+            Assert.AreEqual(20, main.moveTime, "Timer Does Not Set");
         }
 
     }
+
 
 }
 

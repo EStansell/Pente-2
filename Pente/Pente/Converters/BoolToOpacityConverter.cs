@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace Pente.Converters
 {
+	/// <summary>
+	/// This is used to convert the current cell's IsWhitePlayer bool? value to the opacity value that the canvas parent should have
+	/// </summary>
 	[Serializable]
 	public class BoolToOpacityConverter : IValueConverter
 	{
